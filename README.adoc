@@ -2,9 +2,8 @@
 
 = Camel JBang - First steps
 
-_Camel JBang_ is a command-line interface (CLI) that helps you run, iterate, and test your _Apache Camel_ applications without complex setups. It accelerates prototyping: create, validate, and tweak flows quickly—ideal for rapid experimentation and for getting a feel of what _Camel_ can do.
+image:docs/labs/intro-cjbang/images/camel-jbang.png[width=15%] _Camel JBang_ is a command-line interface (CLI) that helps you run, iterate, and test your _Apache Camel_ applications without complex setups. It accelerates prototyping: create, validate, and tweak flows quickly—ideal for rapid experimentation and for getting a feel of what _Camel_ can do. 
 
-image::docs/labs/intro-cjbang/images/camel-jbang.png[width=48%]
 
 This guide gives you a short, hands-on introduction. You'll use a small game to discover a few core commands and see how much you can do with _Camel JBang_ from the terminal.
 
