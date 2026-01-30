@@ -1,24 +1,24 @@
 = Camel JBang - First steps
 
-Get familiar with the prototyping tool that helps you run, iterate, and test your Camel applications.
+Familiarise yourself with the prototyping tool helping you to run, iterate and test your Camel applications.
 
-_Camel JBang_ is a command-line interface (CLI) that speeds up prototyping by letting you quickly create, validate, and tweak flows without complex setup—ideal for rapid experimentation.
+_Camel JBang_ is a command-line interface (CLI) that accelerates prototyping by letting developers quickly create, validate, and tweak flows without complex setups, making it perfect for rapid experimentation.
 
 image::images/camel-jbang.png[width=40%]
 
-This chapter is optional but recommended to see how _Camel JBang_ helps you work quickly with _Apache Camel_.
+This chapter is recommended to understand how _Camel JBang_ helps you work fast with _Apache Camel_.
 
 '''
 
 == Camel JBang at play
 
-This workshop focuses on the prototyping phase. When you need to deliver a solution, prototyping and experimentation are crucial to finding the best approach, especially with new tools and techniques.
+When developers are tasked to deliver a solution, prototyping and experimentation are crucial to finding the best path forward, especially when adopting new, unfamiliar tools and techniques.
 
 _Camel JBang_ is one of those key prototyping tools.
 
 image::images/camel-jbang.png[width=40%]
 
-This chapter is a short introduction to _Camel JBang_ and a basic set of commands. You'll see how much you can speed up your work when you use _Camel JBang_ well.
+This chapter is an introductory taste of _Camel JBang_ showing you a basic group of commands. Hopefully you'll get to see how much you can sharpen your axe when making a good use of _Camel JBang_.
 
 === Find your terminal
 

@@ -183,19 +183,19 @@ image::images/camel-jbang.png[align="left", width=40%]
 
 {empty} +
 
-This chapter is optional but recommended to understand how _Camel JBang_ helps you work fast with _Apache Camel_
+This chapter is recommended to understand how _Camel JBang_ helps you work fast with _Apache Camel_
 
 {empty} +
 
 
-[type=walkthroughResource,serviceName=openshift]
-.Doc System
-****
-[subs=attributes]
-++++
-<div style="padding-left: 20px">{docserver-status}<div>
-++++
-****
+// [type=walkthroughResource,serviceName=openshift]
+// .Doc System
+// ****
+// [subs=attributes]
+// ++++
+// <div style="padding-left: 20px">{docserver-status}<div>
+// ++++
+// ****
 
 
 [time=15]
@@ -203,27 +203,27 @@ This chapter is optional but recommended to understand how _Camel JBang_ helps y
 == Camel JBang at play
 {style-all}
 
-[type=taskResource]
-.Red Hat OpenShift Dev Spaces
-****
-* link:{codeready-url}[Console, window="_blank", , id="resources-codeready-url"]
-****
-[type=taskResource]
-.Red Hat OpenShift Developer Console
-****
-* link:{openshift-host}/topology/ns/{namespace}[Topology View, window="_blank"]
-****
-[type=taskResource]
-.Credentials
-****
-* *username:* `{user-username}`
-//* *password:* `{user-password}`
-****
-[type=walkthroughResource,serviceName=openshift]
+// [type=taskResource]
+// .Red Hat OpenShift Dev Spaces
+// ****
+// * link:{codeready-url}[Console, window="_blank", , id="resources-codeready-url"]
+// ****
+// [type=taskResource]
+// .Red Hat OpenShift Developer Console
+// ****
+// * link:{openshift-host}/topology/ns/{namespace}[Topology View, window="_blank"]
+// ****
+// [type=taskResource]
+// .Credentials
+// ****
+// * *username:* `{user-username}`
+// //* *password:* `{user-password}`
+// ****
+// [type=walkthroughResource,serviceName=openshift]
 
-This workshop puts substantial focus on the prototyping phase. When a developer is tasked to deliver a solution, prototyping and experimentation are crucial to finding the best path forward, especially when adopting new, unfamiliar tools and techniques.
+When a developers are tasked to deliver a solution, prototyping and experimentation are crucial to finding the best path forward, especially when adopting new, unfamiliar tools and techniques.
 
-During this workshop, _Camel JBang_ will be one such important prototyping tool.
+_Camel JBang_ is one of those key prototyping tools.
 
 image::images/camel-jbang.png[align="left", width=40%]
 

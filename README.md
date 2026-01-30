@@ -45,6 +45,16 @@ For now, the workshop only contains one module of exercises. New modules will be
 
 <br/>
 
+## Camel JBang – First steps
+
+The full walkthrough for getting started with _Camel JBang_ is in the repo:
+
+**[Camel JBang - First steps](docs/labs/intro-cjbang/walkthrough.md)**
+
+Familiarise yourself with the prototyping tool helping you to run, iterate and test your Camel applications. _Camel JBang_ is a command-line interface (CLI) that accelerates prototyping by letting developers quickly create, validate, and tweak flows without complex setups, making it perfect for rapid experimentation.
+
+<br/>
+
 ## Run the docs locally
 
 ```
