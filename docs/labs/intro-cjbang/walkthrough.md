@@ -4,7 +4,7 @@ Get familiar with the prototyping tool that helps you run, iterate, and test you
 
 *Camel JBang* is a command-line interface (CLI) that speeds up prototyping by letting you quickly create, validate, and tweak flows without complex setup—ideal for rapid experimentation.
 
-![Camel JBang](images/camel-jbang.png)
+<img src="images/camel-jbang.png" alt="Camel JBang" width="40%" />
 
 This chapter is optional but recommended to see how *Camel JBang* helps you work quickly with *Apache Camel*.
 
@@ -16,7 +16,7 @@ This workshop focuses on the prototyping phase. When you need to deliver a solut
 
 *Camel JBang* is one of those key prototyping tools.
 
-![Camel JBang](images/camel-jbang.png)
+<img src="images/camel-jbang.png" alt="Camel JBang" width="40%" />
 
 This chapter is a short introduction to *Camel JBang* and a basic set of commands. You’ll see how much you can speed up your work when you use *Camel JBang* well.
 
@@ -31,7 +31,7 @@ The first time, your `lab` directory is empty:
 
 For this exercise, work from your terminal. Find it as shown below.
 
-![Dev Spaces terminal](images/crw-terminal.png)
+<img src="images/crw-terminal.png" alt="Dev Spaces terminal" width="100%" />
 
 The following steps will ask you to run commands. Run them in your terminal.
 
@@ -47,7 +47,7 @@ Copy and paste the following into your terminal to create the `player1.yaml` fil
 
 > **Note:** If your terminal asks to confirm the paste, you can tick “✓ Do not ask me again” and click **Paste**.
 
-![Paste multiline](images/paste-multiline.jpg)
+<img src="images/paste-multiline.jpg" alt="Paste multiline" width="30%" />
 
 ```bash
 cat <<EOF > player1.yaml
@@ -95,7 +95,7 @@ Player1 is ready. Give them a 🥎.
 
 From the terminal’s top-right corner, click **+** to open a second terminal:
 
-![Terminal plus](images/terminal-plus.jpg)
+<img src="images/terminal-plus.jpg" alt="Terminal plus" width="30%" />
 
 In the new terminal, use *Camel JBang* to send a ball to player1:
 
@@ -107,7 +107,7 @@ camel cmd send player1 --header CamelFileName=🥎
 
 Switch back to the first terminal where player1 is running:
 
-![Terminal one](images/terminal-one.jpg)
+<img src="images/terminal-one.jpg" alt="Terminal one" width="25%" />
 
 You should see player1 hitting the ball to the other side:
 
@@ -117,7 +117,7 @@ You should see player1 hitting the ball to the other side:
 
 Check the court: the ball should be on the other side:
 
-![Ball on side 2](images/court-side2-ball.jpg)
+<img src="images/court-side2-ball.jpg" alt="Ball on side 2" width="8%" />
 
 **Note:** With only one player, the ball ends up on the other side and stays there.
 
@@ -178,7 +178,7 @@ In the logs you should see the ball boy at work:
 
 On the court, the ball will have been cleared:
 
-![Court clear](images/court-clear.jpg)
+<img src="images/court-clear.jpg" alt="Court clear" width="8%" />
 
 Let player1 practice a bit more, then press **Ctrl+C** to stop.
 
@@ -271,7 +271,7 @@ That’s a rally.
 
 You can also see the ball file moving on disk (court/side1 and court/side2):
 
-![Court rally](images/court-rally.jpg)
+<img src="images/court-rally.jpg" alt="Court rally" width="18%" />
 
 Player1 stops to tie their laces. Stop their route:
 
