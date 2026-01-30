@@ -233,10 +233,20 @@ This chapter is an introductory taste of _Camel JBang_ showing you a basic group
 
 {empty} +
 
+=== Open a terminal
 
-=== Find your terminal
+Whether you're workking in your local machine or from Dev Spaces, you'll need to open a terminal. If you're working in your local machine we recommend using VS Code as the examples below are based on this editor, but you can use any other terminal you prefer.
 
-The first time, your `lab` directory is empty:
+Open a terminal, create a lab directory and change into it from where you'll work.
+
+--
+{copy-open}
+mkdir lab
+cd lab
+{copy-close}
+--
+
+When created the first time, your `lab` directory is empty:
 
 --
 [.indent2]
@@ -247,8 +257,7 @@ pass:[<mark style="padding-left: 1rem; background-color: white; color: grey"></m
 
 {empty}
 
-For this exercise, you will work from your _Dev Spaces_ terminal. +
-Find it, as shown below...
+The picture below shows the terminal in VS Code.
 
 image::images/crw-terminal.png[align="left", width=100%]
 
@@ -828,9 +837,7 @@ It's worth to quickly recap the collection of commands you just used:
 {empty} +
 
 
-Continue with other chapters in the workshop to discover, not only what _Camel JBang_ can do for you beyond what you've just seen, but also other companion tools empowering the developer to work fast with _Apache Camel_.
-
-The rest of the workshop will guide you through the process of rapid prototyping using _Apache Camel_, starting with initial concepts, all the way to deploying on _OpenShift_.
+Continue exploring other examples to discover, not only what _Camel JBang_ can do for you beyond what you've just seen, but also other companion tools empowering the developer to work fast with _Apache Camel_.
 
 {empty} +
 
