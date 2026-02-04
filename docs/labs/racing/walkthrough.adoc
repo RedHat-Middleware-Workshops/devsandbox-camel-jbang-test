@@ -1,0 +1,1297 @@
+:walkthrough: Camel JBang Formula 1 race
+:user-password: openshift
+:namespace: {user-username}-devspaces
+
+// URLs
+:codeready-url: http://devspaces.{openshift-app-host}/
+
+
+:experimental:
+
+// WORKS
+:style-kbd: kbd { \
+  color: black; \
+  background-color: lightgrey; \
+  border: 1px solid black; \
+  box-shadow: 0px 1px black; \
+  font-size: .85em; \
+  line-height: .85em; \
+  display: inline-block; \
+  font-weight: 600; \
+  letter-spacing: .05em; \
+  padding: 3px 5px; \
+  white-space: nowrap; \
+  border-radius:5px; \
+} \
+
+:cp-btn: pass:[<svg fill="currentColor" height="1em" width="1em" viewBox="0 0 448 512" aria-hidden="true" role="img" style="vertical-align: -0.125em;"> <path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"></path></svg>]
+
+:style-summary: summary {cursor: pointer; list-style: none;}
+:style-triangle: .triangle {margin-right: .5em;} summary:hover .sumtext {text-decoration: underline;}
+:style-details:  .triangle::before {content: "▶";} details[open] .triangle::before {content: "▼";}
+:style-open-close: {style-summary}{style-triangle}{style-details} 
+
+:style-preview: pre {background-color: #272822; color: white; padding: 5px 15px; font-size: 15px}
+:style-indent: .indent2 {padding-left: 2rem;}
+:style-all: pass:a[<style>{style-kbd}{style-preview}{style-indent}{style-open-close}</style>]
+
+:url-docserver: https://docserver-webapp.{openshift-app-host}
+//:url-docserver: http://0.0.0.0:8080
+
+:docserver-status: pass:a[<img hidden="true" src="invalid-image.jpg" onerror=" \
+        fetch('{url-docserver}/status') \
+        .then(response => response.text()) \
+        .then(data => this.parentElement.innerHTML = 'Status: <div style=&quot;width:15px;height:15px;border-radius:50%;background:lime;display:inline-block&quot;></div><p>&nbsp;</p>') \
+        .catch(error => this.parentElement.innerHTML = 'Status: <div style=&quot;width:15px;height:15px;border-radius:50%;background:red;display:inline-block&quot;></div><p>&nbsp;</p>') \
+      ">]
+
+:freplace: pass:[function replaceTokens(templateString, values) { \
+    const valueArray = values.split(',').map(val => val.trim()); \
+    let result = templateString; \
+    let replaceIndex = 0; \
+    while (result.includes('REPLACE') && replaceIndex < valueArray.length) { \
+        result = result.replace('REPLACE', valueArray[replaceIndex]); \
+        replaceIndex++; \
+    } \
+    return result; \
+}]
+
+:fdocserver: pass:a[function docserver(target,template,params) { \
+    {freplace} \
+    fetch('{url-docserver}/roomid?user='+params) \
+        .then(response => response.text()) \
+        .then(data => {target.firstChild.data=replaceTokens(text, data);}) \
+        .catch(error => room = 'Error fetching data: ' + error.message); \
+}]
+
+:fcopy: pass:a[function copy(el) { \
+  el.previousElementSibling.select(); \
+  text = el.previousElementSibling.textContent; \
+  console.log(text); \
+  navigator.clipboard.writeText(text + '\n') \
+        .then(response => console.log('Text with carriage return copied to clipboard!')) \
+        .catch(err => console.error('Failed to copy: ', err)); \
+}]
+
+:copypaste: pass:a[ \
+<div style="border: 1px solid #f0f0f0; border-bottom-color: #8a8d90; display: flex; align-items: flex-start;"> \
+  <textarea readonly style="field-sizing: content;border: none; background-color: #f0f0f0; width: 100%; resize: none; font-size:14px; font-family: monospace;padding: 5px 15px" rows="1">function example() { \
+  console.log("Hello {replace-with-previous}!"); \
+  return true; \
+}</textarea> \
+  <button class="mytooltip" onclick="{fcopy} copy(this);" style="border: none; background-color: white; padding: 5px 15px; border-bottom: 1px solid transparent; transition: border-bottom-color 0.2s;"> \
+    <svg fill="currentColor" height="1em" width="1em" viewBox="0 0 448 512" aria-hidden="true" role="img" style="vertical-align: -0.125em;"> \
+      <path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"></path> \
+    </svg> \
+    <span class="mytooltiptext">Copy to clipboard</span> \
+  </button> \
+  <style> \
+.mytooltip{position:relative;display:inline-block;border-bottom:1px dotted black}.mytooltip .mytooltiptext{visibility:hidden;width:120px;background-color:#555;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;opacity:0;transition:opacity 0.3s}.mytooltip .mytooltiptext::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:#555 transparent transparent transparent}.mytooltip:hover .mytooltiptext{visibility:visible;opacity:1} \
+  </style> \
+</div> \
+<img hidden="true" src="invalid-image.jpg" onerror="{ \
+  {fdocserver} \
+  let txtarea = this.parentElement.querySelector('textarea'); \
+  let div = this.closest('.paragraph'); \
+  if(!div.closest('.openblock')){div = div.parentElement} \
+  let source = div.nextElementSibling; \
+  let pre = source.querySelector('pre'); \
+  let text = pre.textContent; \
+  let lineCount = text.split('\n').length; \
+  let tokens = this.nextSibling; \
+  console.log('tokens: [' +tokens.data.trim()+']'); \
+  if(tokens.data.trim()!=''){docserver(txtarea,text,tokens.data);} else {txtarea.firstChild.data=text;} \
+  source.remove(); \
+  tokens.remove(); \
+  this.remove(); \
+  txtarea.style.height = 'auto'; \
+  txtarea.style.height = (txtarea.scrollHeight) + 'px'; \
+}"> \
+]
+
+:fcopy-no-new-line: pass:a[function copy(el) { \
+  el.previousElementSibling.select(); \
+  text = el.previousElementSibling.textContent; \
+  console.log(text); \
+  navigator.clipboard.writeText(text) \
+        .then(response => console.log('Text with carriage return copied to clipboard!')) \
+        .catch(err => console.error('Failed to copy: ', err)); \
+}]
+
+:copy-open: pass:a[ \
+<div style="border: 1px solid #f0f0f0; border-bottom-color: #8a8d90; display: flex; align-items: flex-start;"> \
+  <textarea readonly style="field-sizing: content;border: none; background-color: #f0f0f0; width: 100%; resize: none; font-size:14px; font-family: monospace;padding: 5px 15px" rows="1">]
+
+:copy-close: pass:a[</textarea> \
+  <button class="mytooltip" onclick="{fcopy-no-new-line} copy(this);" style="border: none; background-color: white; padding: 5px 15px; border-bottom: 1px solid transparent; transition: border-bottom-color 0.2s;"> \
+    <svg fill="currentColor" height="1em" width="1em" viewBox="0 0 448 512" aria-hidden="true" role="img" style="vertical-align: -0.125em;"> \
+      <path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"></path> \
+    </svg> \
+    <span class="mytooltiptext">Copy to clipboard</span> \
+  </button> \
+  <style> \
+.mytooltip{position:relative;display:inline-block;border-bottom:1px dotted black}.mytooltip .mytooltiptext{visibility:hidden;width:120px;background-color:#555;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;opacity:0;transition:opacity 0.3s}.mytooltip .mytooltiptext::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:#555 transparent transparent transparent}.mytooltip:hover .mytooltiptext{visibility:visible;opacity:1} \
+  </style> \
+</div> \
+<img hidden="true" src="invalid-image.jpg" onerror="{ \
+  let txtarea = this.parentElement.querySelector('textarea'); \
+  txtarea.value = txtarea.value.slice(0, -1); \
+  this.remove(); \
+  txtarea.style.height = 'auto'; \
+  txtarea.style.height = (txtarea.scrollHeight) + 'px'; \
+}">]
+
+:snippet: pass:a[ \
+<div style="border: 1px solid #f0f0f0; border-bottom-color: #8a8d90; display: flex; align-items: flex-start;"> \
+</div> \
+<img hidden="true" src="invalid-image.jpg" onerror="{ \
+  {freplace} \
+  let block = this.closest('.openblock'); \
+  let div = this.closest('.paragraph'); \
+  let source = div.nextElementSibling; \
+  let pre = source.querySelector('pre'); \
+  let text = pre.textContent; \
+  let lineCount = text.split('\n').length; \
+  let tokens = this.nextSibling; \
+  console.log('tokens: [' +tokens.data.trim()+']'); \
+  console.log('before text: [' +text+']'); \
+  text = replaceTokens(text, tokens.data.trim()); \
+  pre.textContent = text; \
+  console.log('after text: [' +text+']'); \
+  console.log(block); \
+  block.parentElement.insertBefore(pre,block); \
+  block.remove(); \
+}"> \
+]
+
+
+
+
+ifdef::env-github[]
+endif::[]
+
+
+
+[id='formula-camel-jbang']
+= Camel JBang - Motorheads
+
+Familiarise yourself with the prototyping tool helping you to run, iterate and test your Camel applications in a Formula 1 race simulation.
+
+_Camel JBang_ is a command-line interface (CLI) that accelerates prototyping by letting developers quickly create, validate, and tweak flows without complex setups, making it perfect for rapid experimentation.
+
+image::../intro-cjbang/images/camel-jbang.png[align="left", width=40%]
+
+{empty} +
+
+This chapter uses a racing track (with boxes, three sectors, and race control) and racing teams (with livery and team radio) to show how _Camel JBang_ helps you work fast with _Apache Camel_.
+
+{empty} +
+
+
+[time=15]
+[id='racing-track']
+== Build a racing track
+{style-all}
+
+When developers are tasked to deliver a solution, prototyping and experimentation are crucial. _Camel JBang_ is one of those key prototyping tools.
+
+image::../intro-cjbang/images/camel-jbang.png[align="left", width=40%]
+
+{empty} +
+
+This chapter is an introductory taste of _Camel JBang_ in a motoracing context: a racing track with three sectors and a boxes area, plus racing teams that participate in practice and race sessions, each with a livery and team radio.
+
+{empty} +
+
+=== Open a terminal
+
+Whether you're working in your local machine or from Dev Spaces, you'll need to open a terminal. If you're working locally we recommend using VS Code as the examples below are based on this editor, but you can use any other terminal you prefer.
+
+Open a terminal, create a lab directory and change into it from where you'll work.
+
+--
+{copy-open}
+mkdir lab
+cd lab
+{copy-close}
+--
+
+When created the first time, your `lab` directory is empty:
+
+--
+[.indent2]
+📁 workshop +
+&nbsp;&nbsp;📁 *lab* +
+pass:[<mark style="padding-left: 1rem; background-color: white; color: grey"></mark>] [empty]
+--
+
+{empty}
+
+The picture below shows the terminal in VS Code.
+
+image::../intro-cjbang/images/crw-terminal.png[align="left", width=100%]
+
+{blank}
+
+The instructions that follow will prompt you to execute commands. +
+Run them from your terminal. +
+Make sure you run _Camel JBang_ commands from your `lab` directory so that relative paths (such as `file:race-control`) resolve correctly.
+
+{empty} +
+
+=== Build a racing track
+
+Your town got a permit to build a racing track in the area.
+
+This racing track will be straight forward to build:
+
+* It will essentially consist of 3 sectors (s1, s2 and s3).
+* Each sector takes a random amount of time to cover.
+* At the end of sector 3 cars may continue around the track or return to the box area when signaled by race control.
+
+{empty} +
+
+The box area is where teams can work on their car. When a racing car leaves boxes it will go round and round the track covering all 3 sectors in each lap. Race control can signal when all cars have to return to boxes.
+
+Copy the code below to create your racing `track.yaml` file:
+
+--
+{copypaste}
+----
+cat <<'EOF' > track.yaml
+- route:
+    id: sector1
+    from:
+      uri: file:track/s1
+      parameters:
+        delete: true
+      steps:
+        - delay:
+            simple: "${random(4000,6000)}"
+        - to:
+            uri: file:track/s2
+
+- route:
+    id: sector2
+    from:
+      uri: file:track/s2
+      parameters:
+        delete: true
+      steps:
+        - delay:
+            simple: "${random(4000,6000)}"
+        - to:
+            uri: file:track/s3
+
+- route:
+    id: sector3
+    from:
+      uri: file:track/s3
+      parameters:
+        delete: true
+      steps:
+        - delay:
+            simple: "${random(4000,6000)}"
+        - choice:
+            when:
+              - simple: ${variable.global:race-control} == 'boxes'
+                steps:
+                  - to:
+                      uri: file:track/boxes
+            when:
+              - simple: ${variable.global:race-control} == 'last-lap'
+                steps:
+                  - to:
+                      uri: file:track/areas/podium
+            otherwise:
+              steps:
+                - to:
+                    uri: file:track/s1
+
+- route:
+    from:
+      uri: file-watch
+      parameters:
+        path: race-control
+      steps:
+        - setVariable:
+            name: global:race-control
+            simple: ${body}
+EOF
+----
+--
+
+[NOTE]
+====
+The last route retains in memory the last race control directive. +
+When cars complete sector 3, they either:
+
+- Carry on and start a new lap +
+- Drive to boxes or, when the race finishes, drive to the podium area. +
+====
+
+{empty} +
+
+=== Run the track 
+
+Everyone is excited with the newly built track in the region. +
+Open its doors so that teams can arrive and drive around it.
+
+--
+{copypaste}
+----
+camel run track.yaml --background
+----
+--
+
+NOTE: The `--background` flag runs the process detached.
+
+You'll notice in your file explorer a set of directories describing your physical track.files:
+
+- `race-control`
+- `track/boxes`
+- `track/s1`
+- `track/s2`
+- `track/s3`
+
+In your terminal you should see something like:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace;font-size: 12px; line-height: 1.1;">
+...
+
+[ BOXES ]     | Sector 1| Sector 2| Sector 3|
+[-------]     |---------|---------|---------|
+</pre>
+++++
+
+NOTE: The terminal shows the track ready to receive teams.
+
+{empty} +
+
+=== Set up a race control system
+
+Any serious racing track needs a control room. +
+Race control is responsible for communicating directives for the teams to follow, such as:
+
+- Signal the start of practice
+- Signal the return to boxes
+- Signal the grid formation 
+- Trigger the race start sequence and start the race
+
+{empty} +
+
+Copy the code below to put together your `race-control.yaml` crew:
+
+--
+{copypaste}
+----
+cat <<'EOF' > race-control.yaml
+- route:
+    id: welcome
+    from:
+      uri: "timer:trigger?repeatCount=1"
+      steps:
+        - setBody:
+            simple: "Welcome all to the Camel Racing Track!"
+        - to:
+            uri: file:race-control?fileName=message
+
+- route:
+    id: directives
+    from:
+      uri: direct:directive
+      steps:
+        - to:
+            uri: file:race-control
+            parameters:
+              fileName: message
+
+- route:
+    id: race-start-sequence
+    autoStartup: false
+    from:
+      uri: timer:race-start-sequence?repeatCount=1
+      steps:
+        - setHeader:
+            name: CamelFileName
+            constant: message
+        - loop:
+            constant: 3
+            steps:
+            - setBody:
+                simple: light-turns-red-${exchangeProperty.CamelLoopIndex}
+            - to:
+                uri: file:race-control
+            - delay:
+                constant: 2000
+        - setBody:
+            constant: light-turns-green
+        - to:
+            uri: file:race-control
+        - loop:
+            doWhile: true
+            simple: ${body}
+            steps:
+              - poll:
+                  timeout: "1000"
+                  uri: file:track/grid?delete=true
+              - filter:
+                  simple: ${body} != null
+                  steps:
+                    - to:
+                        uri: file:track/s1
+EOF
+----
+--
+
+NOTE: The `race-start-sequence` route is not started automatically (it has `autoStartup: false`). It will be started manually by race control when the time comes to start the race.
+
+Instruct personel to get in position and turn on the race control system. +
+Run the race control system:
+
+--
+{copypaste}
+----
+camel run race-control.yaml --background
+----
+--
+
+Verify everyone is ready by running the command:
+
+--
+{copypaste}
+----
+camel ps
+----
+--
+
+You should see in your terminal the following output:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+  PID   NAME          READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT   
+ 10513  track          1/1   Running  23s      1     0         0   
+ 10725  race-control   1/1   Running   6s      1     0         0 
+</pre>
+++++
+
+{blank}
+
+If you see the same output, then the track is ready, race control is on duty, teams can now arrive at the track and parcipate on racing sessions.
+
+{empty} +
+
+[type=verification]
+Do you see the track and race control processes running?
+
+[type=verificationFail]
+Make sure you follow the commands above. Try again.
+
+[type=verificationSuccess]
+Good! Let's move on to the next step.
+
+
+[time=1]
+[id='camel-racing-team']
+== Put a team together
+
+You found the sponsorship you needed to put together the racing team of your dreams:
+
+ * *🐪🐪🐪 Team Camel Racing 🐪🐪🐪*
+
+{empty} +
+
+A racing team can participate in practice and race sessions. It has a *livery* (default is 🐪, but you can configure a different one for other teams).
+
+[NOTE]
+====
+If you look at the team we're putting together, you'll see their key roles are:
+
+* To deploy their racing car in boxes when the team arrives
+* To drive off to the track when the practice session opens
+* To radio messages to the driver to instruct what to do
+* To tidy up and leave the track when the day ends
+====
+
+Copy the code below to create your racing `team.yaml` file:
+
+--
+{copypaste}
+----
+cat <<'EOF' > team.yaml
+# Place the car in the boxes when the team arrives at the track:
+- route:
+    from:
+      uri: "timer:trigger?repeatCount=1"
+      steps:
+        - to:
+            uri: file:track/boxes
+            parameters:
+              allowNullBody: true
+              fileName: "{{livery:🐪}}‾ō͡≡o˞̶"
+
+# When the practice session opens, the car drives off to the track
+- route:
+    from:
+      uri: file-watch
+      parameters:
+        path: race-control
+        events: CREATE,MODIFY
+      steps:
+        - filter:
+            simple: "${body} == 'practice'"
+            steps:
+              - poll:
+                  uri: file:track/boxes?fileName={{livery:🐪}}‾ō͡≡o˞̶&delete=true
+              - to:
+                  uri: file:track/s1
+        - filter:
+            simple: "${body} == 'grid'"
+            steps:
+              - poll:
+                  uri: file:track/boxes?fileName={{livery:🐪}}‾ō͡≡o˞̶&delete=true
+              - to:
+                  uri: file:track/grid
+
+# The team waits for race control signals and radios the driver to instruct what to do
+- route:
+    id: team-radio
+    from:
+      uri: file-watch
+      parameters:
+        path: race-control
+        events: CREATE
+      steps:
+      - choice:
+          when:
+            - simple: ${body} == 'boxes'
+              steps:
+                - setBody:
+                    simple: "{{livery:🐪}} Please enter boxes at the end of the lap!"
+            - simple: ${body} == 'practice'
+              steps:
+                - setBody:
+                    simple: "{{livery:🐪}} Time to hit the track, practice is open!"
+            - simple: ${body} == 'grid'
+              steps:
+                - setBody:
+                    simple: "{{livery:🐪}} The race is about to start, please drive the car to the grid."
+          otherwise:
+              steps:
+                - setBody:
+                    simple: "{{livery:🐪}} Keep pushing!"
+      - to:
+          uri: file:radio?fileName=message
+
+# Helper bean to retire the car and leave the track.
+- beans:
+    - name: "raceTeam"
+      type: java.lang.Object
+      destroyMethod: removeCar
+      scriptLanguage: groovy
+      script: |
+        class RaceTeam {
+            void removeCar() {
+              def trackAreas = [
+                  'track/areas/podium/{{livery:🐪}}‾ō͡≡o˞̶',
+                  'track/boxes/{{livery:🐪}}‾ō͡≡o˞̶',
+                  'track/grid/{{livery:🐪}}‾ō͡≡o˞̶',
+                  'track/s1/{{livery:🐪}}‾ō͡≡o˞̶',
+                  'track/s2/{{livery:🐪}}‾ō͡≡o˞̶',
+                  'track/s3/{{livery:🐪}}‾ō͡≡o˞̶'
+              ];
+
+              def file = trackAreas.find { new File(it).exists() }?.with { new File(it) };
+
+              if (file?.exists())
+                file.delete();
+            }
+        }
+        return new RaceTeam()
+EOF
+----
+--
+
+{empty} +
+
+=== First private session of practice
+
+Everyone is eager to see the new team and its ground breaking racing car. A shakedown will take place during a private session of practice.
+
+Run the team to kickstart the day. Use the {cp-btn} button to copy, then paste in a *new* terminal (so the track keeps running in the first one) and run the command:
+
+--
+{copypaste}
+----
+camel run team.yaml --name teamCamel --background
+----
+--
+
+NOTE: The team uses `--property=livery=🟥` so that its "car" runs with a red livery. The `--name team1` gives this Camel process a distinct name.
+
+After a moment, you should see the team deploying its car in their allocated pit box.
+
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[ BOXES ]     | Sector 1| Sector 2| Sector 3|
+[-------]     |---------|---------|---------|
+<span style="display:inline-block;width:8ch;min-width:8ch">[🟥‾ō͡≡o˞̶</span>]     |         |         |         |
+</pre>
+++++
+
+{empty} +
+
+++++
+<pre style="line-height: 1;white-space: pre-wrap"><span style="color:grey;font-family: monospace;font-size: 12px;">>>> New Race Team 🟥
+livery color is 🟥
+...
+<span style="color: limegreen;">INFO</span> ... <span style="color: white;">Apache Camel ... started ...</span></span></pre>
+++++
+
+In the *track* terminal you may see the car appear in the boxes (the track watches `track/boxes` and logs when a file is created there).
+
+{empty} +
+
+
+=== Open the track for practice
+
+You are the race director (the boss!).
+
+You are responsible for opening the practice session and signaling the teams to start driving around the track.
+
+What are you waiting for?
+
+Copy and paste in your terminal to issue the command to open the practice session:
+--
+{copypaste}
+----
+camel cmd send race-control --uri direct:directive --body practice
+----
+--
+
+NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `practice` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
+
+Soon after, you should see Team Camel Racing hitting the track and covering the sectors.
+
+Let the team cover good mileage and gather all the data it needs to fine tune their car.
+
+{empty} +
+
+=== Order return to boxes
+
+The time window for the morning session is over. It's time to order the team to return to the boxes.
+
+Copy and paste the command belowin your terminal:
+--
+{copypaste}
+----
+camel cmd send race-control --uri direct:directive --body boxes
+----
+--
+
+NOTE: You may need to wait for the car to get to the last sector to return to the boxes.
+
+Feel free to let the team cover some more laps if they need to, the more laps they cover the more data they can collect for analysis and improve their car.
+
+{empty} +
+
+=== End of the day
+
+It was a good day for *Team Camel Racing*, they can bring valuable data to the factory and prepare for the race event. +
+Time to go home and get some well deserved rest.
+
+Copy and paste the command below to stop `Team Camel Racing` from working:
+
+--
+{copypaste}
+----
+camel stop teamCamel
+----
+--
+
+NOTE: With `teamCamel`, _Camel JBang_ stops only the process running the team.
+
+NOTE: For convenience, we leave all the other processes (the track and race control) running to prepare for the race day.
+
+{empty} +
+
+
+[type=verification]
+Did *Team Camel Racing* leave the track? (did the process stop?)
+
+[type=verificationFail]
+Make sure you followed the commands above. Try again.
+
+[type=verificationSuccess]
+Good! Team Camel Racing will crunch the data they collected and will get ready for a race day event.
+
+
+[time=1]
+[id='race-day']
+== Run a race day event
+
+
+The day of the race is here. Expectations are high and big crowds are expected to attend.
+
+{empty} +
+
+=== Media coverage
+
+In preparation for such a big event we've organized commercial broadcasting for the event. Fans from all over the world will be able to watch the race live on their screens.
+
+The code below sets up the broadcasting system, with multiple cameras on track, to enable the transmission of the race to multiple media channels.
+
+[NOTE]
+====
+In summary, the broadcasting system:
+
+- presents the track to spectators
+- follows cars through the track areas (boxes, sectors and grid)
+- monitors race control directives
+-displays crucial information to spectators
+====
+
+Copy and paste the code below to create your `broadcast.yaml` file:
+
+--
+{copypaste}
+----
+cat <<'EOF' > broadcast.yaml
+- route:
+    from:
+      uri: "timer:trigger?repeatCount=1"
+      steps:
+        - setVariable:
+            name: global:pos
+            constant: 0
+        - log:
+            message: "[ BOXES ]        | Sector 1| Sector 2| Sector 3|"
+        - log:
+            message: "[-------]        |---------|---------|---------|"
+
+- route:
+    id: tv-boxes
+    from:
+      uri: file-watch
+      parameters:
+        path: track/boxes
+        events: CREATE
+      steps:
+        - log:
+            message: "[${header.CamelFileName}]        |         |         |         |"
+
+- route:
+    id: tv-sector1
+    from:
+      uri: file-watch
+      parameters:
+        path: track/s1
+        events: CREATE
+      steps:
+        - log:
+            message: "[       ]        | ${header.CamelFileName} |         |         |"
+
+- route:
+    id: tv-sector2
+    from:
+      uri: file-watch
+      parameters:
+        path: track/s2
+        events: CREATE
+      steps:
+        - log:
+            message: "[       ]        |         | ${header.CamelFileName} |         |"
+
+- route:
+    id: tv-sector3
+    from:
+      uri: file-watch
+      parameters:
+        path: track/s3
+        events: CREATE
+      steps:
+        - log:
+            message: "[       ]        |         |         | ${header.CamelFileNameOnly} |"
+
+- route:
+    id: tv-grid
+    from:
+      uri: file-watch
+      parameters:
+        path: track/grid
+        recursive: false
+        events: CREATE
+      steps:
+        - log:
+            message: "[       ] ${header.CamelFileName}|         |         |         |"
+
+- route:
+    id: tv-race-control
+    from:
+      uri: file-watch
+      parameters:
+        path: race-control
+      steps:
+        - filter:
+            simple: "${body} == 'grid'"
+            steps:
+              - log:
+                  message: "[       ]        |         |         |         |"
+              - log:
+                  message: "[-------]- Grid -|---------|---------|---------|"
+              - log:
+                  message: "[       ]        |         |         |         |"
+        - filter:
+            simple: "${body} starts with 'light-turns-red'"
+            steps:
+            - log:
+                message: "[       ]        🔴        |         |         |"
+        - filter:
+            simple: "${body} == 'light-turns-green'"
+            steps:
+            - log:
+                message: "[       ]        🟢        |         |         |"
+        - filter:
+            simple: "${body} == 'last-lap'"
+            steps:
+            - log:
+                message: "[       ]        |         |         |         |  Last lap!"
+
+- route:
+    id: tv-podium
+    from:
+      uri: file-watch
+      parameters:
+        path: track/areas/podium
+        events: CREATE
+      steps:
+        - setVariable:
+            name: global:pos
+            simple: ${variable.global:pos}++
+        - choice:
+            when:
+            - simple: ${variable.global:pos} == 1
+              steps:
+              - log:
+                  message: "[       ]        |         |         |         |🏁 ${header.CamelFileName} 🏆"
+            otherwise:
+              steps:
+              - log:
+                  message: "[       ]        |         |         |         |🏁 ${header.CamelFileName}"
+EOF
+----
+--
+
+The broadcasting system is in place, initiate the live transmission on television:
+
+--
+{copypaste}
+----
+camel run broadcast.yaml
+----
+--
+
+On TV you should see the track's layout:
+
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace;font-size: 12px; line-height: 1.1;">
+[ BOXES ]     | Sector 1| Sector 2| Sector 3|
+[-------]     |---------|---------|---------|
+</pre>
+++++
+
+{empty} +
+
+=== The racing teams
+
+For a proper race, we need to deploy multiple participating teams.
+
+* *Team Camel Racing*
++
+=====
+Team Camel Racing (woot woot!), is the first to open their box..
+
+Copy and paste the command below to deploy the team:
+--
+{copypaste}
+----
+camel run team.yaml --name teamCamel --background
+----
+--
+=====
+
+{empty} +
+
+* *Team Cavallino Racing*
++
+=====
+And our big rivals (boooo!!) have arrived too, Team Cavallino Racing, with an incredible heritage and legendary wins over the course of history.
+
+Copy and paste the command below to deploy the team:
+--
+{copypaste}
+----
+camel run team.yaml --name teamCavallino  --property=livery=🇮🇹 --background
+----
+--
+
+NOTE: With `--property` we can customize the team's livery. Here we set it to 🇮🇹 for Team Cavallino Racing.
+=====
+
+{empty} +
+
+The lucky ones with race tickets can see what's going on in the venue:
+
+IMAGE PENDING SHOWING THE FILE EXPLORER VIEW WITH THE TEAMS IN THE BOXES
+
+Those less fortunate can watch the race on TV and can see the teams prepare their cars and awaiting for race control to follow with directivesfor the race.
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[ BOXES ]        | Sector 1| Sector 2| Sector 3|
+[-------]        |---------|---------|---------|
+<span style="display:inline-block;width:8ch;min-width:8ch">[🐪‾ō͡≡o˞̶</span>]        |         |         |         |
+<span style="display:inline-block;width:8ch;min-width:8ch">[🇮🇹‾ō͡≡o˞̶</span>]        |         |         |         |
+</pre>
+++++
+
+TIP: Feel free to deploy as many teams as you want to make the race more exciting.
+
+Cars are warming up and soon they'll leave boxes for the main day event to start.
+
+{empty} +
+
+=== Grid formation
+
+The clock is ticking and we're getting closer to the scheduled start of the race.
+
+As the race director, you need to signal the teams to place their cars on the grid.
+
+--
+{copypaste}
+----
+camel cmd send race-control --uri direct:directive --body grid
+----
+--
+
+NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `grid` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
+
+Soon after, you should see teams moving their cars to their grid positions to start the race.
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[ BOXES ]        | Sector 1| Sector 2| Sector 3|
+[-------]        |---------|---------|---------|
+<span style="display:inline-block;width:8ch;min-width:8ch">[🐪‾ō͡≡o˞̶</span>]        |         |         |         |
+<span style="display:inline-block;width:8ch;min-width:8ch">[🇮🇹‾ō͡≡o˞̶</span>]        |         |         |         |
+[       ]        |         |         |         |
+[-------]- Grid -|---------|---------|---------|
+[       ]        |         |         |         |
+[       ]<span style="display:inline-block;width:8ch;min-width:7ch"> 🐪‾ō͡≡o˞̶</span>|         |         |         |
+[       ]<span style="display:inline-block;width:8ch;min-width:7ch"> 🇮🇹‾ō͡≡o˞̶</span>|         |         |         |
+</pre>
+++++
+
+{blank}
+
+Teams can still work on their cars while on the grid for last minute adjustments, but will soon have to leave the grid.
+
+{empty} +
+
+=== Start the race
+
+Mechanics and all other crew members have now left the grid. It is just the drivers and their machines on the tarmac. Engines are rumbling and spectators are waiting with great anticipation for the race to start.
+
+The start sequence is more intricate than people think. To prevent any human error, it's been all automated.
+We rely on the automatic procedure to signal the start of the race.
+
+Copy and paste the command below to start the race:
+--
+{copypaste}
+----
+camel cmd start-route --id start-sequence race-control
+----
+--
+
+NOTE: The `start-route` command starts the route with the given id. Here we start the `start-sequence` route, which if you previously noticed it was defined with the `autoStartup: false` property to prevent it from starting automatically.
+
+Lights will turn red and then green, indicating the start of the race:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[       ]        <span style="display:inline-block;width:8ch;min-width:8ch">🔴</span>  |         |         |
+[       ]        <span style="display:inline-block;width:8ch;min-width:8ch">🔴</span>  |         |         |
+[       ]        <span style="display:inline-block;width:8ch;min-width:8ch">🔴</span>  |         |         |
+[       ]        <span style="display:inline-block;width:8ch;min-width:8ch">🟢</span>  |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+</pre>
+++++
+
+NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `start-race` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
+
+{empty} +
+
+
+=== Watch the race unfold
+
+You'll see the cars racing each other, from time to time you may see some overtakes happening. +
+The example below shows a couple of laps:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |
+</pre>
+++++
+
+NOTE: in the example above, overtakes took place on Sector 3. Notice how *teamCavallino* overtook *teamCamel*, and in the next lap *teamCamel* got first place back.
+
+Follow race stats like number of laps, race duration, sector times with the `get` command:
+
+--
+{copypaste}
+----
+camel get route track --short-uri --watch
+----
+--
+
+NOTE: the command indicates to collect `track` data. The `--watch` flag keeps the command running and updates the output as the race progresses.
+
+You should see lines like:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+99656  track  signals  file-watch://race-control    x     Started  3m18s    2/2   0.00      6     0         0     1     0     5     0     -1  32m15s/32m15s/- 
+99656  track  sector1  file://track/s1              x     Started  <span style="background-color:rgb(243, 251, 7); color:rgb(63, 63, 63);">3m18s</span>    2/2   0.00     <span style="background-color:rgb(243, 251, 7); color:rgb(63, 63, 63);">12</span>     0         0  5070  <span style="background-color:rgb(243, 251, 7); color:rgb(63, 63, 63);">4098</span>  6000  4274  -1634          7s/3s/- 
+99656  track  sector2  file://track/s2              x     Started  3m18s    2/2   0.00     12     0         2  5008  <span style="background-color:rgb(243, 251, 7); color:rgb(63, 63, 63);">4071</span>  6005  4745   +164         3s/11s/- 
+99656  track  sector3  file://track/s3              x     Started  3m18s    3/5   0.00     12     0         0  4946  <span style="background-color:rgb(243, 251, 7); color:rgb(63, 63, 63);">4408</span>  5988  4300   -155         11s/7s/- 
+</pre>
+++++
+
+NOTE: The example above shows the duration of the race so far, the number of laps completed, and the best sector times (in milliseconds).
+
+{empty} +
+
+=== Last lap
+
+The batle between cars is very intense and laps flew by quickly. Drivers are running out of laps as the race is almost over.
+
+As the race director, you need to signal the last lap: 
+
+--
+{copypaste}
+----
+camel cmd send race-control --uri direct:directive --body last-lap
+----
+--
+
+NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `last-lap` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
+
+Watch the cars cross the finish line:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[       ]        |         |         |         |  Last lap!
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |
+[       ]        |         |         |         | 🏁 🐪‾ō͡≡o˞̶ 🏆
+[       ]        |         |         |         | 🏁 🇮🇹‾ō͡≡o˞̶
+</pre>
+++++
+
+... and *Camel Racing* WINS !!!!!!
+
+NOTE: Notice in the example above *teamCamel* making a move on *teamCavallino* in the last turns to take the trophy home.
+
+
+{empty} +
+
+=== Watch the winners lift the trophy
+
+What a fabulous race! +
+But, hurry up, leave your seat in the stands and run onto the track to go near the podium area to see the champions lift the trophy. +
+
+PENDING IMAGE SHOWING THE PODIUM AREA WITH THE WINNERS LIFTING THE TROPHY
+
+The crowd is going wild.
+
+{empty} +
+
+
+[type=verification]
+Did you see the winners lift the trophy?
+
+[type=verificationFail]
+Make sure you followed the commands above. Try again.
+
+[type=verificationSuccess]
+Good! The race was a success and the winners are celebrating their victory.
+
+
+[time=1]
+[id='packing-and-closing']
+== Packing and closing down
+{style-all}
+
+It's time to pack up and close down the track.
+
+This is generally not fun for teams and track personnel, there's a lot of work involved. +
+But not with *_Camel JBang_*, letting you finish and wrap up very quickly with this nifty command!
+
+--
+{copypaste}
+----
+camel stop
+----
+--
+
+NOTE: With no name, _Camel JBang_ stops all running Camel processes.
+
+You should see the logs from the track and teams:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+Shutting down Camel integration (PID: 22901)
+Shutting down Camel integration (PID: 22675)
+Shutting down Camel integration (PID: 22480)
+Shutting down Camel integration (PID: 22321)
+Shutting down Camel integration (PID: 22167)
+</pre>
+++++
+
+TIP: Run `camel ps` to confirm all running processes have been stopped.
+
+{empty} +
+
+=== Listen to team radio messages
+
+Each team has a *team radio* route that reacts to race-control signals and writes a short message to the `radio` directory. You can listen to those messages with the `receive` command:
+
+--
+{copypaste}
+----
+camel cmd receive --endpoint='file-watch:radio' --only-body
+----
+--
+
+When race control sends `practice-open` or `boxes`, the teams write messages such as "🟥 Time to hit the track, practice is open!" or "🟨 Please enter boxes at the end of the lap!". The `receive` command watches the `radio` directory and prints the body of each new message.
+
+TIP: Run `camel cmd send ... CamelFileName=practice-open` or `CamelFileName=boxes` again (from the lab directory) and watch the receive terminal to see the team radio messages.
+
+{empty} +
+
+=== Stop the race
+
+When you're done, stop all processes. In each terminal where a route is running, press kbd:[Ctrl+C], or run:
+
+--
+{copypaste}
+----
+camel stop
+----
+--
+
+🏎️🏁
+Keep exploring the workshop to see more.
+🏎️🏁
+
+
+
+{empty} +
+
+
+
+[type=verification]
+Was the race interesting?
+
+[type=verificationFail]
+That's a shame, stay a bit longer, I'm sure you'll find another thrilling race.
+
+[type=verificationSuccess]
+Good! Time then to get back to real work !
+
+
+
+[time=1]
+[id='clean-up']
+== Clean up your lab folder
+
+Make sure your `lab` folder stays clean in preparation for your next lab exercises.
+
+Run the command below (from your `lab` directory):
+
+--
+{copy-open}
+rm -r *
+{copy-close}
+--
+
+{empty} +
+
+Your `lab` folder should contain no files or directories.
+
+{empty} +
+
+
+[type=verification]
+Is your `lab` folder empty?
+
+[type=verificationFail]
+Make sure you follow the commands above. Try again.
+
+[type=verificationSuccess]
+Get ready to start working !
+
+
+[time=1]
+[id='closing-words']
+== Closing words
+
+This was a brief introduction to working with the motoracing game: a track (boxes, three sectors, race control) and teams (livery, team radio) using _Camel JBang_.
+
+Quick recap of what you used:
+
+* For running Camel:
+** Run the track: `camel run track.yaml`
+** Run a team with a livery: `camel run team.yaml --property=livery=🟥 --name team1`
+
+{blank}
+
+* For race control:
+** Open practice: `camel cmd send --body $RANDOM --uri file:race-control --header CamelFileName=practice-open`
+** Signal boxes: `camel cmd send --body $RANDOM --uri file:race-control --header CamelFileName=boxes`
+
+{blank}
+
+* For monitoring and receiving:
+** Aggregate logs: `camel log`
+** Listen to team radio: `camel cmd receive --endpoint='file-watch:radio' --only-body`
+
+{blank}
+
+* For stopping: `camel stop` (stops all)
+
+{empty} +
+
+
+Continue exploring other examples to discover what _Camel JBang_ can do beyond this intro, and how it fits with other tools for working quickly with _Apache Camel_.
+
+{empty} +

@@ -173,7 +173,7 @@ endif::[]
 
 
 [id='intro-camel-jbang']
-= Camel JBang - First steps
+= Camel JBang - Play tennis
 
 Familiarise yourself with the prototyping tool helping you to run, iterate and test your Camel applications. 
 

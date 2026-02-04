@@ -1,0 +1,39 @@
+A racing track
+ - it has the boxes area for teams to work on the car
+ - it has 3 sectors (s1, s2 and s3)
+ - race control
+
+A racing team
+ - it can participate in practice and race session.
+ - it has a livery
+ - it radios messages to its driver
+
+
+Storyline:
+
+ - Let's open the track for a private practice session
+ 	> camel run track.yaml
+
+ - The racing team arrives to the track and parks their racing car in boxes
+    > camel run team.yaml --property=livery=🟥 --name team1
+
+ - Open the track for the practice session
+    > camel cmd send --body $RANDOM --uri file:race-control --header CamelFileName=practice-open
+
+ - Practice session ends, signal cars to go back to boxes
+    > camel cmd send --body $RANDOM --uri file:race-control --header CamelFileName=boxes
+
+ - Stop the race track and teams (Reset)
+
+ - Race day, open the track.
+
+ - 2 teams participate in the event
+   > camel run team.yaml --property=livery=🟥 --name team1
+   > camel run team.yaml --property=livery=🟨 --name team2
+
+ - Annouce the race start
+
+ - watch the race as it unfolds
+
+ - listen to team radio messages
+   > camel cmd receive --endpoint='file-watch:radio' --only-body
