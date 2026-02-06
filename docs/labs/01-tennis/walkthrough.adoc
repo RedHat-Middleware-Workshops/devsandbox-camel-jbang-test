@@ -172,8 +172,8 @@ endif::[]
 
 
 
-[id='intro-camel-jbang']
-= Camel JBang - Play tennis
+[id='tennis-rally']
+= Camel JBang - Tennis Rally
 
 Familiarise yourself with the prototyping tool helping you to run, iterate and test your Camel applications. 
 

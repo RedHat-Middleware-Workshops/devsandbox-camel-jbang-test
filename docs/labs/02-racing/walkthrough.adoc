@@ -172,14 +172,14 @@ endif::[]
 
 
 
-[id='formula-camel-jbang']
-= Camel JBang - Motorheads
+[id='full-throttle']
+= Camel JBang - Full Throttle
 
-Familiarise yourself with the prototyping tool helping you to run, iterate and test your Camel applications in a Formula 1 race simulation.
+Jump into Camel JBang with a thrilling motor racing simulation — prototype, iterate, and test your integrations at maximum speed.
 
 _Camel JBang_ is a command-line interface (CLI) that accelerates prototyping by letting developers quickly create, validate, and tweak flows without complex setups, making it perfect for rapid experimentation.
 
-image::../intro-cjbang/images/camel-jbang.png[align="left", width=40%]
+image::images/camel-jbang.png[align="left", width=40%]
 
 {empty} +
 
@@ -195,7 +195,7 @@ This chapter uses a racing track (with boxes, three sectors, and race control) a
 
 When developers are tasked to deliver a solution, prototyping and experimentation are crucial. _Camel JBang_ is one of those key prototyping tools.
 
-image::../intro-cjbang/images/camel-jbang.png[align="left", width=40%]
+image::images/camel-jbang.png[align="left", width=40%]
 
 {empty} +
 
@@ -229,7 +229,7 @@ pass:[<mark style="padding-left: 1rem; background-color: white; color: grey"></m
 
 The picture below shows the terminal in VS Code.
 
-image::../intro-cjbang/images/crw-terminal.png[align="left", width=100%]
+image::images/terminal.png[align="left", width=100%]
 
 {blank}
 
@@ -298,9 +298,13 @@ cat <<'EOF' > track.yaml
                 steps:
                   - to:
                       uri: file:track/boxes
-            when:
               - simple: ${variable.global:race-control} == 'last-lap'
                 steps:
+                  - setVariable:
+                      name: global:finish-position
+                      simple: ${variable.global:finish-position}++
+                  - setBody:
+                      simple: ${variable.global:finish-position}
                   - to:
                       uri: file:track/areas/podium
             otherwise:
@@ -309,6 +313,7 @@ cat <<'EOF' > track.yaml
                     uri: file:track/s1
 
 - route:
+    id: signals
     from:
       uri: file-watch
       parameters:
@@ -317,6 +322,17 @@ cat <<'EOF' > track.yaml
         - setVariable:
             name: global:race-control
             simple: ${body}
+
+- route:
+    id: init
+    from:
+      uri: timer:init
+      parameters:
+        repeatCount: 1
+      steps:
+        - setVariable:
+            name: global:finish-position
+            constant: 0
 EOF
 ----
 --
@@ -346,26 +362,21 @@ camel run track.yaml --background
 
 NOTE: The `--background` flag runs the process detached.
 
-You'll notice in your file explorer a set of directories describing your physical track.files:
-
-- `race-control`
-- `track/boxes`
-- `track/s1`
-- `track/s2`
-- `track/s3`
-
-In your terminal you should see something like:
+You should see an output in your terminal similar to:
 
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace;font-size: 12px; line-height: 1.1;">
-...
-
-[ BOXES ]     | Sector 1| Sector 2| Sector 3|
-[-------]     |---------|---------|---------|
+Running Camel integration: track in background with PID: 6381
 </pre>
 ++++
 
-NOTE: The terminal shows the track ready to receive teams.
+{blank}
+
+Notice in your file explorer a set of directories describing your physical track:
+
+image::images/track-folders.png[align="left", width=10%]
+
+NOTE: The track watches the `race-control` directory, necessary for sector 3.
 
 {empty} +
 
@@ -374,10 +385,11 @@ NOTE: The terminal shows the track ready to receive teams.
 Any serious racing track needs a control room. +
 Race control is responsible for communicating directives for the teams to follow, such as:
 
-- Signal the start of practice
-- Signal the return to boxes
-- Signal the grid formation 
-- Trigger the race start sequence and start the race
+* Communicate directives to the teams, such as:
+** Signal the start of a practice session
+** Signal the return to boxes
+** Signal the grid formation for the race
+* Trigger the race start sequence and start the race
 
 {empty} +
 
@@ -387,16 +399,6 @@ Copy the code below to put together your `race-control.yaml` crew:
 {copypaste}
 ----
 cat <<'EOF' > race-control.yaml
-- route:
-    id: welcome
-    from:
-      uri: "timer:trigger?repeatCount=1"
-      steps:
-        - setBody:
-            simple: "Welcome all to the Camel Racing Track!"
-        - to:
-            uri: file:race-control?fileName=message
-
 - route:
     id: directives
     from:
@@ -408,10 +410,10 @@ cat <<'EOF' > race-control.yaml
               fileName: message
 
 - route:
-    id: race-start-sequence
+    id: start-sequence
     autoStartup: false
     from:
-      uri: timer:race-start-sequence?repeatCount=1
+      uri: timer:start-sequence?repeatCount=1
       steps:
         - setHeader:
             name: CamelFileName
@@ -426,7 +428,7 @@ cat <<'EOF' > race-control.yaml
             - delay:
                 constant: 2000
         - setBody:
-            constant: light-turns-green
+            constant: race-on
         - to:
             uri: file:race-control
         - loop:
@@ -495,10 +497,13 @@ Good! Let's move on to the next step.
 [time=1]
 [id='camel-racing-team']
 == Put a team together
+{style-all}
 
 You found the sponsorship you needed to put together the racing team of your dreams:
 
- * *🐪🐪🐪 Team Camel Racing 🐪🐪🐪*
+++++
+<span style="font-size:45px;">&nbsp;&nbsp;🐪&nbsp;</span><span style="font-size:25px;"><b>Team Camel Racing</b></span><span style="font-size:45px;">&nbsp;🐪</span>
+++++
 
 {empty} +
 
@@ -510,8 +515,8 @@ If you look at the team we're putting together, you'll see their key roles are:
 
 * To deploy their racing car in boxes when the team arrives
 * To drive off to the track when the practice session opens
-* To radio messages to the driver to instruct what to do
-* To tidy up and leave the track when the day ends
+* To radio instructions to its driver to instruct
+* To tidy up and leave the venue when the day ends
 ====
 
 Copy the code below to create your racing `team.yaml` file:
@@ -531,13 +536,12 @@ cat <<'EOF' > team.yaml
               allowNullBody: true
               fileName: "{{livery:🐪}}‾ō͡≡o˞̶"
 
-# When the practice session opens, the car drives off to the track
+# The crew reacts when the practice session opens, the car drives off to the track
 - route:
     from:
       uri: file-watch
       parameters:
         path: race-control
-        events: CREATE,MODIFY
       steps:
         - filter:
             simple: "${body} == 'practice'"
@@ -554,14 +558,13 @@ cat <<'EOF' > team.yaml
               - to:
                   uri: file:track/grid
 
-# The team waits for race control signals and radios the driver to instruct what to do
+# Radio messages: the team reacts to race control directives and talks to the driver
 - route:
     id: team-radio
     from:
       uri: file-watch
       parameters:
         path: race-control
-        events: CREATE
       steps:
       - choice:
           when:
@@ -572,19 +575,51 @@ cat <<'EOF' > team.yaml
             - simple: ${body} == 'practice'
               steps:
                 - setBody:
-                    simple: "{{livery:🐪}} Time to hit the track, practice is open!"
+                    simple: "{{livery:🐪}} Green light for practice, let's get some laps in!"
             - simple: ${body} == 'grid'
               steps:
                 - setBody:
                     simple: "{{livery:🐪}} The race is about to start, please drive the car to the grid."
-          otherwise:
+            - simple: ${body} == 'race-on'
               steps:
                 - setBody:
-                    simple: "{{livery:🐪}} Keep pushing!"
-      - to:
-          uri: file:radio?fileName=message
+                    simple: "{{livery:🐪}} Good start! mind your brakes still need to gain temperature."
+            - simple: ${body} == 'last-lap'
+              steps:
+                - setBody:
+                    simple: "{{livery:🐪}} This is the last lap, bring the car home!"
+          otherwise:
+            steps:
+            - setBody:
+                simple: "ignore"
+      - filter:
+          simple: ${body} != "ignore"
+          steps:
+          - to:
+              uri: file:radio?fileName=team-{{livery:🐪}}
 
-# Helper bean to retire the car and leave the track.
+# Radio messages: the team congratulates the drive when the race ends
+- route:
+    from:
+      uri: file-watch
+      parameters:
+        path: track/areas/podium
+        antInclude: "{{livery:🐪}}‾ō͡≡o˞̶"
+      steps:
+      - choice:
+          when:
+          - simple: ${body} == '1'
+            steps:
+            - setBody:
+                simple: "{{livery:🐪}} Absolutely amazing! You're the WINNER! "
+          otherwise:
+            steps:
+            - setBody:
+                simple: "{{livery:🐪}} Awesome drive! great result for the team."
+      - to:
+          uri: file:radio?fileName=team-{{livery:🐪}}
+
+# Helper bean to retire the car and leave the venue.
 - beans:
     - name: "raceTeam"
       type: java.lang.Object
@@ -628,32 +663,18 @@ camel run team.yaml --name teamCamel --background
 ----
 --
 
-NOTE: The team uses `--property=livery=🟥` so that its "car" runs with a red livery. The `--name team1` gives this Camel process a distinct name.
+NOTE: The `--name teamCamel` gives this Camel process a distinct name.
 
-After a moment, you should see the team deploying its car in their allocated pit box.
+After a moment, you should see the *Team Camel* deploying its beautiful racing car in their allocated pit box.
 
+image::images/box-camel.png[align="left", width=10%]
 
-++++
-<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
-[ BOXES ]     | Sector 1| Sector 2| Sector 3|
-[-------]     |---------|---------|---------|
-<span style="display:inline-block;width:8ch;min-width:8ch">[🟥‾ō͡≡o˞̶</span>]     |         |         |         |
-</pre>
-++++
+[NOTE]
+====
+Click pass:[<span style="font-size: 35px;">↻</span>] to refresh your project file explorer, and make sure to unfold the boxes directory to see the *Team Camel* car.
+====
 
 {empty} +
-
-++++
-<pre style="line-height: 1;white-space: pre-wrap"><span style="color:grey;font-family: monospace;font-size: 12px;">>>> New Race Team 🟥
-livery color is 🟥
-...
-<span style="color: limegreen;">INFO</span> ... <span style="color: white;">Apache Camel ... started ...</span></span></pre>
-++++
-
-In the *track* terminal you may see the car appear in the boxes (the track watches `track/boxes` and logs when a file is created there).
-
-{empty} +
-
 
 === Open the track for practice
 
@@ -671,9 +692,20 @@ camel cmd send race-control --uri direct:directive --body practice
 ----
 --
 
-NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `practice` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
+[NOTE]
+====
+`cmd send` is a command to send a message with Camel JBang:.
 
-Soon after, you should see Team Camel Racing hitting the track and covering the sectors.
+* `race-control` is the target process
+* `direct:directive` is the target endpoint in that process
+* `practice` is the body of the message to send
+====
+
+Soon after, you should see *Team Camel Racing* hitting the road and lapping around the track covering all three sectors.
+
+image::images/track-practice.png[align="left", width=15%]
+
+{blank}
 
 Let the team cover good mileage and gather all the data it needs to fine tune their car.
 
@@ -683,7 +715,7 @@ Let the team cover good mileage and gather all the data it needs to fine tune th
 
 The time window for the morning session is over. It's time to order the team to return to the boxes.
 
-Copy and paste the command belowin your terminal:
+Copy and paste the command below in your terminal:
 --
 {copypaste}
 ----
@@ -693,7 +725,12 @@ camel cmd send race-control --uri direct:directive --body boxes
 
 NOTE: You may need to wait for the car to get to the last sector to return to the boxes.
 
-Feel free to let the team cover some more laps if they need to, the more laps they cover the more data they can collect for analysis and improve their car.
+image::images/box-camel.png[align="left", width=10%]
+
+{blank}
+
+Feel free to let the team go back on track to put more mileage under their belts. +
+The more laps they cover the more data they can collect for analysis and improve their car.
 
 {empty} +
 
@@ -711,7 +748,7 @@ camel stop teamCamel
 ----
 --
 
-NOTE: With `teamCamel`, _Camel JBang_ stops only the process running the team.
+NOTE: With `teamCamel`, _Camel JBang_  only stops the running process with that name.
 
 NOTE: For convenience, we leave all the other processes (the track and race control) running to prepare for the race day.
 
@@ -731,9 +768,33 @@ Good! Team Camel Racing will crunch the data they collected and will get ready f
 [time=1]
 [id='race-day']
 == Run a race day event
-
+{style-all}
 
 The day of the race is here. Expectations are high and big crowds are expected to attend.
+
+[NOTE]
+====
+Verify the processes below are still running:
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+  PID   NAME          READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT   
+ 10513  track          1/1   Running  23s      1     0         0   
+ 10725  race-control   1/1   Running   6s      1     0         0 
+</pre>
+++++
+
+Use the command:
+
+--
+{copypaste}
+----
+camel ps
+----
+--
+
+You should see in your terminal an output similar to the one from above.
+
+====
 
 {empty} +
 
@@ -741,7 +802,7 @@ The day of the race is here. Expectations are high and big crowds are expected t
 
 In preparation for such a big event we've organized commercial broadcasting for the event. Fans from all over the world will be able to watch the race live on their screens.
 
-The code below sets up the broadcasting system, with multiple cameras on track, to enable the transmission of the race to multiple media channels.
+The code below sets up the media coverate, with multiple cameras on track, enabling the transmission of the race to multiple media channels.
 
 [NOTE]
 ====
@@ -760,12 +821,10 @@ Copy and paste the code below to create your `broadcast.yaml` file:
 ----
 cat <<'EOF' > broadcast.yaml
 - route:
+    id: tv-track-layout
     from:
       uri: "timer:trigger?repeatCount=1"
       steps:
-        - setVariable:
-            name: global:pos
-            constant: 0
         - log:
             message: "[ BOXES ]        | Sector 1| Sector 2| Sector 3|"
         - log:
@@ -813,7 +872,7 @@ cat <<'EOF' > broadcast.yaml
         events: CREATE
       steps:
         - log:
-            message: "[       ]        |         |         | ${header.CamelFileNameOnly} |"
+            message: "[       ]        |         |         | ${header.CamelFileName} |"
 
 - route:
     id: tv-grid
@@ -849,7 +908,7 @@ cat <<'EOF' > broadcast.yaml
             - log:
                 message: "[       ]        🔴        |         |         |"
         - filter:
-            simple: "${body} == 'light-turns-green'"
+            simple: "${body} == 'race-on'"
             steps:
             - log:
                 message: "[       ]        🟢        |         |         |"
@@ -867,19 +926,16 @@ cat <<'EOF' > broadcast.yaml
         path: track/areas/podium
         events: CREATE
       steps:
-        - setVariable:
-            name: global:pos
-            simple: ${variable.global:pos}++
         - choice:
             when:
-            - simple: ${variable.global:pos} == 1
+            - simple: ${body} == '1'
               steps:
               - log:
-                  message: "[       ]        |         |         |         |🏁 ${header.CamelFileName} 🏆"
+                  message: "[       ]        |         |         |         | 🏁 ${header.CamelFileName} 🏆"
             otherwise:
               steps:
               - log:
-                  message: "[       ]        |         |         |         |🏁 ${header.CamelFileName}"
+                  message: "[       ]        |         |         |         | 🏁 ${header.CamelFileName}"
 EOF
 ----
 --
@@ -905,6 +961,12 @@ On TV you should see the track's layout:
 
 {empty} +
 
+=== Open a second Terminal
+
+Since your current terminal is now where you will watch the televised race, open a second terminal to work in.
+
+{empty} +
+
 === The racing teams
 
 For a proper race, we need to deploy multiple participating teams.
@@ -912,7 +974,7 @@ For a proper race, we need to deploy multiple participating teams.
 * *Team Camel Racing*
 +
 =====
-Team Camel Racing (woot woot!), is the first to open their box..
+Team Camel Racing (woot woot!), is the first to open their box.
 
 Copy and paste the command below to deploy the team:
 --
@@ -934,11 +996,15 @@ Copy and paste the command below to deploy the team:
 --
 {copypaste}
 ----
-camel run team.yaml --name teamCavallino  --property=livery=🇮🇹 --background
+camel run team.yaml --name teamCavallino  --property=livery=🐎 --background
 ----
 --
 
-NOTE: With `--property` we can customize the team's livery. Here we set it to 🇮🇹 for Team Cavallino Racing.
+[NOTE]
+--
+With `--property` we can customize the team's livery. +
+Here we set it to pass:[<span style="font-size:35px;">🐎</span>] for *Team Cavallino Racing*.
+--
 =====
 
 {empty} +
@@ -954,7 +1020,7 @@ Those less fortunate can watch the race on TV and can see the teams prepare thei
 [ BOXES ]        | Sector 1| Sector 2| Sector 3|
 [-------]        |---------|---------|---------|
 <span style="display:inline-block;width:8ch;min-width:8ch">[🐪‾ō͡≡o˞̶</span>]        |         |         |         |
-<span style="display:inline-block;width:8ch;min-width:8ch">[🇮🇹‾ō͡≡o˞̶</span>]        |         |         |         |
+<span style="display:inline-block;width:8ch;min-width:8ch">[🐎‾ō͡≡o˞̶</span>]        |         |         |         |
 </pre>
 ++++
 
@@ -986,12 +1052,12 @@ Soon after, you should see teams moving their cars to their grid positions to st
 [ BOXES ]        | Sector 1| Sector 2| Sector 3|
 [-------]        |---------|---------|---------|
 <span style="display:inline-block;width:8ch;min-width:8ch">[🐪‾ō͡≡o˞̶</span>]        |         |         |         |
-<span style="display:inline-block;width:8ch;min-width:8ch">[🇮🇹‾ō͡≡o˞̶</span>]        |         |         |         |
+<span style="display:inline-block;width:8ch;min-width:8ch">[🐎‾ō͡≡o˞̶</span>]        |         |         |         |
 [       ]        |         |         |         |
 [-------]- Grid -|---------|---------|---------|
 [       ]        |         |         |         |
 [       ]<span style="display:inline-block;width:8ch;min-width:7ch"> 🐪‾ō͡≡o˞̶</span>|         |         |         |
-[       ]<span style="display:inline-block;width:8ch;min-width:7ch"> 🇮🇹‾ō͡≡o˞̶</span>|         |         |         |
+[       ]<span style="display:inline-block;width:8ch;min-width:7ch"> 🐎‾ō͡≡o˞̶</span>|         |         |         |
 </pre>
 ++++
 
@@ -1027,7 +1093,7 @@ Lights will turn red and then green, indicating the start of the race:
 [       ]        <span style="display:inline-block;width:8ch;min-width:8ch">🔴</span>  |         |         |
 [       ]        <span style="display:inline-block;width:8ch;min-width:8ch">🟢</span>  |         |         |
 [       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
-[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
 </pre>
 ++++
 
@@ -1044,17 +1110,17 @@ The example below shows a couple of laps:
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
 [       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
-[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
 [       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
-[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |
-[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
 [       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
-[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
 [       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
-[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |
 [       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
 [       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
-[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
 </pre>
 ++++
 
@@ -1106,18 +1172,20 @@ Watch the cars cross the finish line:
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
 [       ]        |         |         |         |  Last lap!
-[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
 [       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
-[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |
 [       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
 [       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
-[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🇮🇹‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
 [       ]        |         |         |         | 🏁 🐪‾ō͡≡o˞̶ 🏆
-[       ]        |         |         |         | 🏁 🇮🇹‾ō͡≡o˞̶
+[       ]        |         |         |         | 🏁 🐎‾ō͡≡o˞̶
 </pre>
 ++++
 
-... and *Camel Racing* WINS !!!!!!
+{blank}
+
+pass:[...] and *Camel Racing* WINS !!!!!!
 
 NOTE: Notice in the example above *teamCamel* making a move on *teamCavallino* in the last turns to take the trophy home.
 
