@@ -239,11 +239,14 @@ Whether you're workking in your local machine or from Dev Spaces, you'll need to
 
 Open a terminal, create a lab directory and change into it from where you'll work.
 
+Click the {cp-btn} button (Copy to clipboard), and paste in your terminal:
+
 --
-{copy-open}
+{copypaste}
+----
 mkdir lab
 cd lab
-{copy-close}
+----
 --
 
 When created the first time, your `lab` directory is empty:

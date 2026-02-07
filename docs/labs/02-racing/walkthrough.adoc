@@ -183,11 +183,6 @@ image::images/camel-jbang.png[align="left", width=40%]
 
 {empty} +
 
-This chapter uses a racing track (with boxes, three sectors, and race control) and racing teams (with livery and team radio) to show how _Camel JBang_ helps you work fast with _Apache Camel_.
-
-{empty} +
-
-
 [time=15]
 [id='racing-track']
 == Build a racing track
@@ -209,11 +204,14 @@ Whether you're working in your local machine or from Dev Spaces, you'll need to 
 
 Open a terminal, create a lab directory and change into it from where you'll work.
 
+Click the {cp-btn} button (Copy to clipboard), and paste in your terminal:
+
 --
-{copy-open}
+{copypaste}
+----
 mkdir lab
 cd lab
-{copy-close}
+----
 --
 
 When created the first time, your `lab` directory is empty:
@@ -253,7 +251,7 @@ This racing track will be straight forward to build:
 
 The box area is where teams can work on their car. When a racing car leaves boxes it will go round and round the track covering all 3 sectors in each lap. Race control can signal when all cars have to return to boxes.
 
-Copy the code below to create your racing `track.yaml` file:
+Click the {cp-btn} button (Copy to clipboard), and paste in your terminal to create your racing `track.yaml` file:
 
 --
 {copypaste}
@@ -703,11 +701,13 @@ camel cmd send race-control --uri direct:directive --body practice
 
 Soon after, you should see *Team Camel Racing* hitting the road and lapping around the track covering all three sectors.
 
-image::images/track-practice.png[align="left", width=15%]
+image::images/track-practice.jpg[align="left", width=15%]
+
+NOTE: Make sure you unfold (down arrow *⋁* ) all sector directories to see the car lapping around the track.
 
 {blank}
 
-Let the team cover good mileage and gather all the data it needs to fine tune their car.
+Let the car cover good distance to gather all the data it needs.
 
 {empty} +
 
@@ -729,8 +729,8 @@ image::images/box-camel.png[align="left", width=10%]
 
 {blank}
 
-Feel free to let the team go back on track to put more mileage under their belts. +
-The more laps they cover the more data they can collect for analysis and improve their car.
+Feel free to let the car go back on track to put more mileage under its belt. +
+The more laps it covers the more data the team can collect for analysis and car improvement.
 
 {empty} +
 
@@ -766,8 +766,8 @@ Good! Team Camel Racing will crunch the data they collected and will get ready f
 
 
 [time=1]
-[id='race-day']
-== Run a race day event
+[id='race-event']
+== Open the race event
 {style-all}
 
 The day of the race is here. Expectations are high and big crowds are expected to attend.
@@ -777,9 +777,9 @@ The day of the race is here. Expectations are high and big crowds are expected t
 Verify the processes below are still running:
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
-  PID   NAME          READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT   
- 10513  track          1/1   Running  23s      1     0         0   
- 10725  race-control   1/1   Running   6s      1     0         0 
+ PID    NAME          READY  STATUS    AGE    TOTAL  FAIL  INFLIGHT   
+ 10513  track          1/1   Running  22m55s    138     0         0   
+ 10725  race-control   1/1   Running  20m34s      2     0         0 
 </pre>
 ++++
 
@@ -809,9 +809,9 @@ The code below sets up the media coverate, with multiple cameras on track, enabl
 In summary, the broadcasting system:
 
 - presents the track to spectators
-- follows cars through the track areas (boxes, sectors and grid)
+- follows cars around the different areas of the track (boxes, sectors and grid)
 - monitors race control directives
--displays crucial information to spectators
+- displays crucial information to spectators
 ====
 
 Copy and paste the code below to create your `broadcast.yaml` file:
@@ -823,12 +823,18 @@ cat <<'EOF' > broadcast.yaml
 - route:
     id: tv-track-layout
     from:
-      uri: "timer:trigger?repeatCount=1"
+      uri: "timer:layout?repeatCount=1"
       steps:
-        - log:
-            message: "[ BOXES ]        | Sector 1| Sector 2| Sector 3|"
-        - log:
-            message: "[-------]        |---------|---------|---------|"
+        - filter:
+            simple: ${variable.global:hide} == null
+            steps:
+            - log:
+                message: "[ BOXES ]        | Sector 1| Sector 2| Sector 3|"
+            - log:
+                message: "[-------]        |---------|---------|---------|"
+            - setVariable:
+                name: global:hide
+                constant: true
 
 - route:
     id: tv-boxes
@@ -940,17 +946,18 @@ EOF
 ----
 --
 
-The broadcasting system is in place, initiate the live transmission on television:
+The broadcasting system is in place, initiate the live televised transmission:
 
 --
 {copypaste}
 ----
-camel run broadcast.yaml
+camel run broadcast.yaml --dev
 ----
 --
 
-On TV you should see the track's layout:
+NOTE: The `--dev` flag enables *development mode*, a powerful feature of Camel JBang allowing the developer to make code changes on the fly.
 
+Your pass:[<span style="font-size:35px;">📺</span>] screen will show the track's layout:
 
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace;font-size: 12px; line-height: 1.1;">
@@ -959,12 +966,44 @@ On TV you should see the track's layout:
 </pre>
 ++++
 
+NOTE: Later, *development mode* will allow us to readjust the live televised transmission while the race   is ongoing.
+
 {empty} +
 
 === Open a second Terminal
 
 Since your current terminal is now where you will watch the televised race, open a second terminal to work in.
 
+For better watching we recommend you organize your terminals horizontally. If you are using VS Code or DevSpaces, you can do this by dragging the terminal window to the side.
+
+Perform the actions listed below:
+
+NOTE: The example below is for DevSpaces, but the process is similar for VS Code. +
+If using your local machine, you can equally organize your local terminals horizontally.
+
+1. *Drag and drop* the current terminal around the lower center of the area above:
++
+image::images/terminals-horizontal-1.jpg[align="left", width=80%]
++
+{blank}
++
+1. Then open a *new terminal* using the menus:
++
+image::images/terminals-horizontal-2.jpg[align="left", width=80%]
++
+{empty} +
++
+1. Lastly, in the new terminal, make sure you switch to the `lab` directory:
++
+--
+{copypaste}
+----
+cd lab
+----
+--
++
+You're all set to continue with the next step.
++
 {empty} +
 
 === The racing teams
@@ -1007,13 +1046,13 @@ Here we set it to pass:[<span style="font-size:35px;">🐎</span>] for *Team Cav
 --
 =====
 
-{empty} +
+The fortunate ones with grandstands seating right in front of the pit area will see the cars in their boxes:
 
-The lucky ones with race tickets can see what's going on in the venue:
+image::images/race-boxes.png[align="left", width=10%]
 
-IMAGE PENDING SHOWING THE FILE EXPLORER VIEW WITH THE TEAMS IN THE BOXES
+{blank}
 
-Those less fortunate can watch the race on TV and can see the teams prepare their cars and awaiting for race control to follow with directivesfor the race.
+Many say watching races on TV is better, not missing out on any details:
 
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
@@ -1024,15 +1063,87 @@ Those less fortunate can watch the race on TV and can see the teams prepare thei
 </pre>
 ++++
 
+{blank}
+
 TIP: Feel free to deploy as many teams as you want to make the race more exciting.
 
 Cars are warming up and soon they'll leave boxes for the main day event to start.
 
 {empty} +
 
-=== Grid formation
+=== Listen to team radio messages
 
-The clock is ticking and we're getting closer to the scheduled start of the race.
+Teams are constantly communicating with their drivers to provide instructions and updates. It's interesting to tune in as it gives great insights into the team's strategy and the driver's performance.
+
+In your lower terminal, click the `split` button to open a new terminal side by side:
+
+image::images/terminal-split.png[align="left", width=30%]
+
+{blank}
+
+In the new terminal, copy and paste the command below to listen to team radio messages:
+
+--
+{copypaste}
+----
+camel cmd receive --uri file-watch:radio --only-body
+----
+--
+
+[NOTE]
+====
+`cmd receive` is another powerful command from Camel JBang. Use it to consume outputs generated by Camel.
+
+* `file-watch:radio` is the consumer
+* `--only-body` is a flag to only show the body of the message
+====
+
+The output will show:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+Waiting for messages ...
+Waiting for messages ...
+</pre>
+++++
+
+NOTE: You see 2 lines ("waiting for messages...") because the command is capturing messages from both *Team Camel* and *Team Cavallino*.
+
+As the event is underway, you'll see team radio messages appearing in your terminal.
+
+{empty} +
+
+
+[type=verification]
+Are both teams ( *Team Camel Racing* and *Team Cavallino Racing* ) ready to start the race? (in boxes?)
+
+[type=verificationFail]
+Make sure you followed the commands above. Try again.
+
+[type=verificationSuccess]
+Great! It's time to start the race. 
+
+
+[type=verification]
+Is your radio terminal turned on? (waiting for team messages?)
+
+[type=verificationFail]
+Make sure you followed the commands above. Try again.
+
+[type=verificationSuccess]
+Nice! it'll be interesting to listen to the team messages as the race progresses.
+
+
+[time=1]
+[id='race-start']
+== Grid formation and race start
+{style-all}
+
+The grandstands are full and the crowd is excited.
+
+We're now just moments away from the scheduled race start. As always, launching the race follows a strict protocol to ensure maximum safety and fairness for all competitors.
+
+=== Grid formation
 
 As the race director, you need to signal the teams to place their cars on the grid.
 
@@ -1043,7 +1154,14 @@ camel cmd send race-control --uri direct:directive --body grid
 ----
 --
 
-NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `grid` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
+[NOTE]
+====
+`cmd send` is a command to send a message with Camel JBang:.
+
+* `race-control` is the target process
+* `direct:directive` is the target endpoint in that process
+* `grid` is the body of the message to send
+====
 
 Soon after, you should see teams moving their cars to their grid positions to start the race.
 
@@ -1082,7 +1200,15 @@ camel cmd start-route --id start-sequence race-control
 ----
 --
 
-NOTE: The `start-route` command starts the route with the given id. Here we start the `start-sequence` route, which if you previously noticed it was defined with the `autoStartup: false` property to prevent it from starting automatically.
+[NOTE]
+====
+`cmd start-route` is a command to start a route with Camel JBang.
+
+* `start-sequence` is the id of the route to start
+* `race-control` is the target process
+====
+
+NOTE: The route `start-sequence` was originally defined with the `autoStartup: false` preventing it from starting automatically. The command above starts the route manually.
 
 Lights will turn red and then green, indicating the start of the race:
 
@@ -1096,8 +1222,6 @@ Lights will turn red and then green, indicating the start of the race:
 [       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
 </pre>
 ++++
-
-NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `start-race` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
 
 {empty} +
 
@@ -1126,6 +1250,121 @@ The example below shows a couple of laps:
 
 NOTE: in the example above, overtakes took place on Sector 3. Notice how *teamCavallino* overtook *teamCamel*, and in the next lap *teamCamel* got first place back.
 
+=== Behind the Scenes: Broadcasting Upgrade
+
+Innevitably the cost of broadcasting races isn't econically viable unless another source of income is found. For that reason we decided to upgrade the broadcast system to include advertising.
+
+This is when the *development mode* of Camel JBang comes in handy, allowing for on-the-fly changes to the broadcast system while the live transmission is ongoing.
+
+Copy and paste the code below:
+
+--
+{copypaste}
+----
+cat << 'EOF' >> broadcast.yaml
+
+- route:
+    id: tv-commercials
+    from:
+      uri: "direct:commercial"
+      steps:
+        - log:
+            message: "|----------------------------------------------|"
+        - log:
+            message: "| ${body}"
+        - log:
+            message: "|----------------------------------------------|"
+EOF
+----
+--
+
+NOTE: The new route is added to the `broadcast.yaml` file opening a new interface to display commercials. 
+
+You'll see the broadcast process react to the code changes and hot reload the routes. +
+Your terminal output will display something like:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+Routes reloaded summary (total:9 started:9)
+    Started tv-track-layout (timer://layout) (source: broadcast.yaml:4)
+    Started tv-boxes (file-watch://track/boxes) (source: broadcast.yaml:20)
+    Started tv-sector1 (file-watch://track/s1) (source: broadcast.yaml:31)
+    Started tv-sector2 (file-watch://track/s2) (source: broadcast.yaml:42)
+    Started tv-sector3 (file-watch://track/s3) (source: broadcast.yaml:53)
+    Started tv-grid (file-watch://track/grid) (source: broadcast.yaml:64)
+    Started tv-race-control (file-watch://race-control) (source: broadcast.yaml:76)
+    Started tv-podium (file-watch://track/areas/podium) (source: broadcast.yaml:108)
+    Started <span style="background-color:rgb(243, 251, 7); color:rgb(63, 63, 63);">tv-commercials</span> (direct://commercial) (source: broadcast.yaml:145)
+</pre>
+++++
+
+NOTE: Notice highlighted in yellow the new route `tv-commercials` now also included in the process.
+
+Under our new contractual terms, our obligation is to show a few commercials during the race.
+
+Copy and paste the command below to inject a commercial:
+
+--
+{copypaste}
+----
+camel cmd send broadcast --uri direct:commercial \
+--body "Integration race? Camel laps the competition"
+----
+--
+
+or try out:
+
+--
+{copypaste}
+----
+camel cmd send broadcast --uri direct:commercial \
+--body "JBang it. Instant Camel. Instant win."
+----
+--
+
+[NOTE]
+====
+`cmd send` is a command to send a message with Camel JBang:.
+
+* `broadcast` is the target process
+* `direct:commercial` is the target endpoint in that process
+* `--body` defines the message (the commercial content) to send
+====
+
+Ads will be shown to audiences watching the race, for example:
+
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
+|----------------------------------------------|
+| JBang + Camel: Instant routes,instant victory
+|----------------------------------------------|
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
+|----------------------------------------------|
+| No build, no wait—just pure Camel JBang speed
+|----------------------------------------------|
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
+</pre>
+++++
+
+{blank}
+
+TIP: Be considerate with the amount of commercials you show. Overloading drops viewer retention.
+
+{empty} +
+
+=== Get race statistics
+
 Follow race stats like number of laps, race duration, sector times with the `get` command:
 
 --
@@ -1148,13 +1387,13 @@ You should see lines like:
 </pre>
 ++++
 
-NOTE: The example above shows the duration of the race so far, the number of laps completed, and the best sector times (in milliseconds).
+NOTE: The example above shows the duration of the race so far, number of laps completed, and best sector times (in milliseconds).
 
 {empty} +
 
 === Last lap
 
-The batle between cars is very intense and laps flew by quickly. Drivers are running out of laps as the race is almost over.
+The on-track battle is heating up and laps are flying by quickly. Drivers are running out of laps as the race is almost over.
 
 As the race director, you need to signal the last lap: 
 
@@ -1164,8 +1403,6 @@ As the race director, you need to signal the last lap:
 camel cmd send race-control --uri direct:directive --body last-lap
 ----
 --
-
-NOTE: The `send` command sends a message to an endpoint. Here we send to `race-control` the directive `last-lap` which creates the `message` file in the `race-control` folder. The track and teams watch that folder and react to the directive.
 
 Watch the cars cross the finish line:
 
@@ -1189,17 +1426,39 @@ pass:[...] and *Camel Racing* WINS !!!!!!
 
 NOTE: Notice in the example above *teamCamel* making a move on *teamCavallino* in the last turns to take the trophy home.
 
+{empty} +
+
+=== Fascinating radio messages
+
+Have a look to the radio messages transmitted from the teams to their drivers.
+
+Below you can see the last radio transmissions when drivers crossed the finish line:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+<span style="color: #0BBD79;">Received Message: (5)</span>
+  Endpoint  file-watch://radio 
+  Body      <span style="color: #979797">(java.io.File) (size: 43 bytes: 41)</span> 
+  🐪 Absolutely amazing! You're the WINNER! 
+<span style="color: #0BBD79;">Received Message: (6)</span>
+  Endpoint  file-watch://radio 
+  Body      <span style="color: #979797">(java.io.File) (size: 46 bytes: 44)</span> 
+  🐎 Awesome drive! great result for the team. 
+</pre>
+++++
 
 {empty} +
 
 === Watch the winners lift the trophy
 
 What a fabulous race! +
-But, hurry up, leave your seat in the stands and run onto the track to go near the podium area to see the champions lift the trophy. +
+A crowd gathers around the podium area, hurry up, leave your seat in the stands and join them to see the champions lift the trophy.
 
-PENDING IMAGE SHOWING THE PODIUM AREA WITH THE WINNERS LIFTING THE TROPHY
+image::images/track-podium.png[align="left", width=15%]
 
-The crowd is going wild.
+{blank}
+
+The crowd is going wild as the winners lift the trophy.
 
 {empty} +
 
@@ -1249,58 +1508,8 @@ TIP: Run `camel ps` to confirm all running processes have been stopped.
 
 {empty} +
 
-=== Listen to team radio messages
 
-Each team has a *team radio* route that reacts to race-control signals and writes a short message to the `radio` directory. You can listen to those messages with the `receive` command:
-
---
-{copypaste}
-----
-camel cmd receive --endpoint='file-watch:radio' --only-body
-----
---
-
-When race control sends `practice-open` or `boxes`, the teams write messages such as "🟥 Time to hit the track, practice is open!" or "🟨 Please enter boxes at the end of the lap!". The `receive` command watches the `radio` directory and prints the body of each new message.
-
-TIP: Run `camel cmd send ... CamelFileName=practice-open` or `CamelFileName=boxes` again (from the lab directory) and watch the receive terminal to see the team radio messages.
-
-{empty} +
-
-=== Stop the race
-
-When you're done, stop all processes. In each terminal where a route is running, press kbd:[Ctrl+C], or run:
-
---
-{copypaste}
-----
-camel stop
-----
---
-
-🏎️🏁
-Keep exploring the workshop to see more.
-🏎️🏁
-
-
-
-{empty} +
-
-
-
-[type=verification]
-Was the race interesting?
-
-[type=verificationFail]
-That's a shame, stay a bit longer, I'm sure you'll find another thrilling race.
-
-[type=verificationSuccess]
-Good! Time then to get back to real work !
-
-
-
-[time=1]
-[id='clean-up']
-== Clean up your lab folder
+=== Clean up your lab folder
 
 Make sure your `lab` folder stays clean in preparation for your next lab exercises.
 
@@ -1332,30 +1541,34 @@ Get ready to start working !
 [time=1]
 [id='closing-words']
 == Closing words
+{style-all}
 
-This was a brief introduction to working with the motoracing game: a track (boxes, three sectors, race control) and teams (livery, team radio) using _Camel JBang_.
+This was a fun introduction to Camel JBang, a tool that allows you to quickly prototype and test integrations.
 
-Quick recap of what you used:
+Let's do a quick review of the commands you used in this lab:
 
-* For running Camel:
-** Run the track: `camel run track.yaml`
-** Run a team with a livery: `camel run team.yaml --property=livery=🟥 --name team1`
 
-{blank}
-
-* For race control:
-** Open practice: `camel cmd send --body $RANDOM --uri file:race-control --header CamelFileName=practice-open`
-** Signal boxes: `camel cmd send --body $RANDOM --uri file:race-control --header CamelFileName=boxes`
+* For running Camel, how to:
+** Run an integration
+** Run in the background
+** Run in *dev* mode (hot reload)
+** Run with properties
 
 {blank}
 
-* For monitoring and receiving:
-** Aggregate logs: `camel log`
-** Listen to team radio: `camel cmd receive --endpoint='file-watch:radio' --only-body`
+* For troubleshooting/monitoring, how to:
+** List running instances
+** Start/Stop routes in process
+** Make live code changes (dev mode)
+** Get route statistics
+** Send messages to endpoints
+** Receive message with consumers
 
 {blank}
 
-* For stopping: `camel stop` (stops all)
+* For stopping Camel, how to:
+** Stop single instance
+** Stop all processes
 
 {empty} +
 
