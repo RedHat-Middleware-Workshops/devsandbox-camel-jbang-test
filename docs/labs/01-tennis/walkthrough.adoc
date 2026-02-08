@@ -254,10 +254,6 @@ pass:[<mark style="padding-left: 1rem; background-color: white; color: grey"></m
 
 They say playing is a great way to learn, so let's play for a bit. While you're at it you'll discover a few tricks _Camel JBang_ has in the bag.
 
-NOTE: Later, we'll get serious when diving into the core of the workshop.
-
-{empty} +
-
 Pretend we're about to organise a tennis tournament.
 Let us introduce to you **player1**:
 

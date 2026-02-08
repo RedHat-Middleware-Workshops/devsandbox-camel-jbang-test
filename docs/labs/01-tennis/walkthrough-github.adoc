@@ -59,8 +59,6 @@ When created the first time, your `lab` directory is empty:
 
 They say playing is a great way to learn, so let's play for a bit. While you're at it you'll discover a few tricks _Camel JBang_ has in the bag.
 
-NOTE: Later, we'll get serious when diving into the core of the workshop.
-
 Pretend we're about to organise a tennis tournament.
 Let us introduce to you **player1**:
 
@@ -188,16 +186,22 @@ When you see everyone ready, use the command below to restart:
 camel run *
 ----
 
-NOTE: _Camel JBang_ makes things easy: use the `*` wildcard when you have multiple individuals on court. The wildcard also picks up property files where you can configure a different game behaviour. Here's a file (optional example) `game.properties` you could use:
+[NOTE]
+====
+_Camel JBang_ makes things easy:
 
-[source,properties]
-----
-# Ball pace (millis) when players hit. Lower value is faster.
-pace=3000
+* Use the `*` wildcard when you have multiple individuals on court. +
+* The wildcard also picks up property files where you can configure a different game behaviour. +
+Here's a file (optional example) `game.properties` you could use:
++
+++++
+<pre style="line-height: 1;white-space: pre-wrap"><span style="color:forestgreen;font-family: monospace;font-size: 12px;"># Ball pace (millis) when players hit. Lower value is faster.
+<span style="color: skyblue;">pace</span><span style="color: white;">=3000</span>
 
 # Ballboy waits (millis) before picking up the ball.
-wait=6000
-----
+<span style="color: skyblue;">wait</span><span style="color: white;">=6000</span></span></pre>
+++++
+====
 
 Inspect the terminal logs, you should see the ball boy already at work:
 
