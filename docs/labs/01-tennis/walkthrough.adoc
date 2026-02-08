@@ -183,6 +183,15 @@ image::images/camel-jbang.png[align="left", width=40%]
 
 {empty} +
 
+[NOTE]
+====
+Familiarity with Apache Camel is helpful but not required to complete this lab. If you have little or no prior experience, consider reviewing an introduction to Enterprise Integration Patterns and Apache Camel first:
+
+* link:https://developers.redhat.com/products/red-hat-build-of-apache-camel[Red Hat build of Apache Camel (enterprise-focused overview),window="_blank", , id="rhd-apache-camel"]
+====
+
+{empty} +
+
 This chapter is recommended to understand how _Camel JBang_ helps you work fast with _Apache Camel_
 
 {empty} +

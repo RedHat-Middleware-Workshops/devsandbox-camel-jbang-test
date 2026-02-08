@@ -183,6 +183,15 @@ image::images/camel-jbang.png[align="left", width=40%]
 
 {empty} +
 
+[NOTE]
+====
+Familiarity with Apache Camel is helpful but not required to complete this lab. If you have little or no prior experience, consider reviewing an introduction to Enterprise Integration Patterns and Apache Camel first:
+
+* link:https://developers.redhat.com/products/red-hat-build-of-apache-camel[Red Hat build of Apache Camel (enterprise-focused overview),window="_blank", , id="rhd-apache-camel"]
+====
+
+{empty} +
+
 [time=5]
 [id='racing-track']
 == Build a racing track
@@ -533,12 +542,12 @@ A racing team can participate in practice and race sessions. It has a *livery* (
 
 [NOTE]
 ====
-If you look at the team we're putting together, you'll see their key roles are:
+The list below outlines the key responsibilities of the team:
 
-* To deploy their racing car in boxes when the team arrives
-* To drive off to the track when the practice session opens
-* To radio instructions to its driver to instruct
-* To tidy up and leave the venue when the day ends
+* Unbox and deploy the racing car in boxes upon arrival at the venue
+* Drive the car to the track when the practice session begins
+* Radio instructions to the driver during sessions
+* Pack up equipment and leave the venue at the end of the day
 ====
 
 Click the {cp-btn} button (Copy to clipboard), and paste in your terminal to create your racing `team.yaml` file:
@@ -842,7 +851,7 @@ You should see in your terminal an output similar to the one from above.
 
 In preparation for such a big event we've organized commercial broadcasting for the event. Fans from all over the world will be able to watch the race live on their screens.
 
-The code below sets up the media coverate, with multiple cameras on track, enabling the transmission of the race to multiple media channels.
+The code below sets up the media coverage, with multiple cameras on track, enabling the transmission of the race to multiple media channels.
 
 [NOTE]
 ====
@@ -1012,7 +1021,11 @@ camel run broadcast.yaml --dev
 
 NOTE: The `--dev` flag enables *development mode*, a powerful feature of Camel JBang allowing the developer to make code changes on the fly.
 
-Your pass:[<span style="font-size:35px;">📺</span>] screen will show the track's layout:
+From this point onwards, your terminal effectively becomes your TV screen pass:[<span style="font-size:35px;">📺</span>] where you'll be able to watch the race unfold.
+
+When the televised program starts, it first introduces the circuit's layout, displaying the boxes area and the 3 track sectors, as shown below:
+
+// Your pass:[<span style="font-size:35px;">📺</span>] screen will show the track's layout:
 
 ++++
 <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace;font-size: 12px; line-height: 1.1;">
@@ -1029,7 +1042,7 @@ NOTE: Later, *development mode* will allow us to readjust the live televised tra
 
 Since your current terminal is now where you will watch the televised race, open a second terminal to work in.
 
-For better watching we recommend you organize your terminals horizontally. If you are using VS Code or DevSpaces, you can do this with a drag and drop operation.
+For the best race viewing experience, arrange your terminals horizontally. If you are using VS Code or DevSpaces, you can do this with a drag and drop operation.
 
 Follow the steps as illustrated below:
 
@@ -1048,14 +1061,21 @@ image::images/terminals-horizontal-2.jpg[align="left", width=80%]
 +
 {empty} +
 +
-1. Lastly, in the new terminal, make sure you switch to the `lab` directory:
+{empty} +
 +
+1. Lastly, *pass:[<span style="font-size:25px;">VERY IMPORTANT 👀</span>]*
++
+[IMPORTANT]
+====
+In the new terminal, make sure you switch to the `*lab*` directory:
+
 --
 {copypaste}
 ----
 cd lab
 ----
 --
+====
 +
 You're all set to continue with the next step.
 +
@@ -1313,7 +1333,7 @@ NOTE: in the example above, overtakes took place on Sector 3. Notice how *teamCa
 
 === Behind the Scenes: Broadcasting Upgrade
 
-Innevitably the cost of broadcasting races isn't econically viable unless another source of income is found. For that reason we decided to upgrade the broadcast system to include advertising.
+Innevitably the cost of broadcasting races isn't economically viable unless another source of income is found. For that reason we decided to upgrade the broadcast system to include advertising.
 
 This is when the *development mode* of Camel JBang comes in handy, allowing for on-the-fly changes to the broadcast system while the live transmission is ongoing.
 
@@ -1494,7 +1514,7 @@ NOTE: Notice in the example above *teamCamel* making a move on *teamCavallino* i
 
 === Fascinating radio messages
 
-Have a look to the radio messages transmitted from the teams to their drivers.
+Have a look at the radio messages transmitted from the teams to their drivers.
 
 Below you can see the last radio transmissions when drivers crossed the finish line:
 
