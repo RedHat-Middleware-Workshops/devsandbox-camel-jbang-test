@@ -567,13 +567,13 @@ The day of the race is here. Big crowds are expected to attend.
 [NOTE]
 ====
 Verify the processes below are still running:
-++++
-<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
- PID    NAME          READY  STATUS    AGE    TOTAL  FAIL  INFLIGHT   
- 10513  track          1/1   Running  22m55s    138     0         0   
- 10725  race-control   1/1   Running  20m34s      2     0         0 
-</pre>
-++++
+
+.Example output
+----
+ PID    NAME          READY  STATUS    AGE    TOTAL  FAIL  INFLIGHT
+ 10513  track          1/1   Running  22m55s    138     0         0
+ 10725  race-control   1/1   Running  20m34s      2     0         0
+----
 
 Use the command:
 
@@ -585,15 +585,7 @@ camel ps
 You should see in your terminal an output similar to the one from above.
 ====
 
-
-NOTE: Verify the processes below are still running. Use the command `camel ps`. You should see in your terminal an output similar to:
-
-.Example output
-----
- PID    NAME          READY  STATUS    AGE    TOTAL  FAIL  INFLIGHT
- 10513  track          1/1   Running  22m55s    138     0         0
- 10725  race-control   1/1   Running  20m34s      2     0         0
-----
+{empty} +
 
 === Media coverage
 
@@ -601,7 +593,15 @@ In preparation for such a big event we've organized commercial broadcasting for 
 
 The code below sets up the media coverage, with multiple cameras on track, enabling the transmission of the race to multiple media channels.
 
-NOTE: In summary, the broadcasting system: presents the track to spectators; follows cars around the different areas of the track (boxes, sectors and grid); monitors race control directives; displays crucial information to spectators.
+[NOTE]
+====
+In summary, the broadcasting system:
+
+- presents the track to spectators
+- follows cars around the different areas of the track (boxes, sectors and grid)
+- monitors race control directives
+- displays crucial information to spectators
+====
 
 Copy and paste the following into your terminal to create your `broadcast.yaml` file:
 
@@ -765,6 +765,8 @@ When the televised program starts, it first introduces the circuit's layout, dis
 
 NOTE: Later, *development mode* will allow us to readjust the live televised transmission while the race is ongoing.
 
+{empty} +
+
 === Open a second Terminal
 
 Since your current terminal is now where you will watch the televised race, open a second terminal to work in.
@@ -781,48 +783,68 @@ image::images/terminals-horizontal-1.jpg[width=80%]
 . Then open a *new terminal* using the menus:
 +
 image::images/terminals-horizontal-2.jpg[width=80%]
-. *VERY IMPORTANT:* In the new terminal, make sure you switch to the `lab` directory:
 +
+{empty} +
+. *VERY IMPORTANT 👀*
++
+[IMPORTANT]
+====
+In the new terminal, make sure you switch to the `*lab*` directory:
+
 [source,bash]
 ----
 cd lab
 ----
-
+====
++
 You're all set to continue with the next step.
+
+{empty} +
 
 === The racing teams
 
 For a proper race, we need to deploy multiple participating teams.
 
 * *Team Camel Racing*
-
++
 Team Camel Racing (woot woot!), is the first to open their box.
-
++
 Copy and paste the following into your terminal to deploy the team:
-
++
 [source,bash]
 ----
 camel run team.yaml --name teamCamel --background
 ----
 
 * *Team Cavallino Racing*
-
++
 And our big rivals (boooo!!) have arrived too, Team Cavallino Racing, with an incredible heritage and legendary wins over the course of history.
-
++
 Copy and paste the following into your terminal to deploy the team:
-
++
 [source,bash]
 ----
 camel run team.yaml --name teamCavallino  --property=livery=🐎 --background
 ----
-
-NOTE: With `--property` we can customize the team's livery. Here we set it to 🐎 for *Team Cavallino Racing*.
++
+NOTE: With `--property` we can customize the team's livery. +
+Here we set it to 🐎 for *Team Cavallino Racing*.
 
 The fortunate ones with grandstands seating right in front of the pit area will see the cars in their boxes:
 
 image::images/race-boxes.png[width=10%]
 
 Many say watching races on TV is better, not missing out on any details:
+
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[ BOXES ]        | Sector 1| Sector 2| Sector 3|
+[-------]        |---------|---------|---------|
+<span style="display:inline-block;width:8ch;min-width:8ch">[🐪‾ō͡≡o˞̶</span>]        |         |         |         |
+<span style="display:inline-block;width:8ch;min-width:8ch">[🐎‾ō͡≡o˞̶</span>]        |         |         |         |
+</pre>
+++++
 
 .Example output
 ----
@@ -835,6 +857,8 @@ Many say watching races on TV is better, not missing out on any details:
 TIP: Feel free to deploy as many teams as you want to make the race more exciting.
 
 Cars are warming up and soon they'll leave boxes for the main day event to start.
+
+{empty} +
 
 === Listen to team radio messages
 
