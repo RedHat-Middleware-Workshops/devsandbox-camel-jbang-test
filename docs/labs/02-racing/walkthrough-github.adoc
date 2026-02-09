@@ -302,21 +302,21 @@ Do you see the track and race control processes running? Good! Let's move on to 
 
 You found the sponsorship you needed to put together the racing team of your dreams:
 
-
 ++++
 <span style="font-size:45px;">&nbsp;&nbsp;🐪&nbsp;</span><span style="font-size:25px;"><b>Team Camel Racing</b></span><span style="font-size:45px;">&nbsp;🐪</span>
 ++++
 
-**Team Camel Racing** 🐪
-
 A racing team can participate in practice and race sessions. It has a *livery* (default is 🐪, but you can configure a different one for other teams).
 
-NOTE: The list below outlines the key responsibilities of the team:
+[NOTE]
+====
+The list below outlines the key responsibilities of the team:
 
 * Unbox and deploy the racing car in boxes upon arrival at the venue
 * Drive the car to the track when the practice session begins
 * Radio instructions to the driver during sessions
 * Pack up equipment and leave the venue at the end of the day
+====
 
 Copy and paste the following into your terminal to create your racing `team.yaml` file:
 
@@ -455,6 +455,8 @@ At this point, you should see the following sources in your file explorer:
    track.yaml
 ----
 
+{empty} +
+
 === First private session of practice
 
 Everyone is eager to see the new team and its ground breaking racing car. A shakedown will take place during a private session of practice.
@@ -474,7 +476,17 @@ After a moment, you should see the *Team Camel* deploying its beautiful racing c
 
 image::images/box-camel.png[width=10%]
 
-NOTE: Click the refresh icon to refresh your project file explorer. Make sure to *unfold* the boxes directory to see the *Team Camel* car.
+
+[NOTE]
+====
+- Click pass:[<span style="font-size: 35px;">↻</span>] to refresh your project file explorer.
+
+- Make sure to *unfold* the boxes directory to see the *Team Camel* car.
+====
+
+// NOTE: Click the refresh icon to refresh your project file explorer. Make sure to *unfold* the boxes directory to see the *Team Camel* car.
+
+{empty} +
 
 === Open the track for practice
 
