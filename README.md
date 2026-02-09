@@ -38,6 +38,8 @@ Run these labs in **Dev Spaces** on [Red Hat Developer Sandbox](https://develope
 2. **Register** — Sign up to access (open and free to everyone).
 3. **Start the labs** — Find the samples (tiles) and click **"Apache Camel Basics"**:
 
+    (From Dev Spaces, open `Readme.md` with, right-click, then *Open Preview* and follow the guidance.)
+
     <img src="docs/images/devspaces-sample-camel.jpg" width="30%" />
 ---
 
