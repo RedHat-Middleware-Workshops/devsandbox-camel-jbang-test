@@ -1250,6 +1250,8 @@ This was a fun introduction to Camel JBang, a tool that allows you to quickly pr
 
 Let's do a quick review of the types of commands you learned about in this lab:
 
+{empty} +
+
 *For running Camel, how to:*
 
 * Run integrations
