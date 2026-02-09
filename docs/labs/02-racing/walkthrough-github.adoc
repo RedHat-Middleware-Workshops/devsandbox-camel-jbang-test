@@ -306,6 +306,8 @@ You found the sponsorship you needed to put together the racing team of your dre
 <span style="font-size:45px;">&nbsp;&nbsp;🐪&nbsp;</span><span style="font-size:25px;"><b>Team Camel Racing</b></span><span style="font-size:45px;">&nbsp;🐪</span>
 ++++
 
+{empty} +
+
 A racing team can participate in practice and race sessions. It has a *livery* (default is 🐪, but you can configure a different one for other teams).
 
 [NOTE]
@@ -484,8 +486,6 @@ image::images/box-camel.png[width=10%]
 - Make sure to *unfold* the boxes directory to see the *Team Camel* car.
 ====
 
-// NOTE: Click the refresh icon to refresh your project file explorer. Make sure to *unfold* the boxes directory to see the *Team Camel* car.
-
 {empty} +
 
 === Open the track for practice
@@ -503,7 +503,14 @@ Copy and paste the following into your terminal to issue the command to open the
 camel cmd send race-control --uri direct:directive --body practice
 ----
 
-NOTE: `cmd send` is a command to send a message with Camel JBang: `race-control` is the target process, `direct:directive` is the target endpoint in that process, `practice` is the body of the message to send.
+[NOTE]
+====
+`cmd send` is a command to send a message with Camel JBang:.
+
+* `race-control` is the target process
+* `direct:directive` is the target endpoint in that process
+* `practice` is the body of the message to send
+====
 
 Soon after, you should see *Team Camel Racing* hitting the road and lapping around the track covering all three sectors.
 
@@ -512,6 +519,8 @@ image::images/track-practice.jpg[width=15%]
 NOTE: Make sure you unfold (down arrow *⋁* ) all sector directories to see the car lapping around the track.
 
 Let the car cover good distance to gather all the data it needs.
+
+{empty} +
 
 === Order return to boxes
 
@@ -530,6 +539,8 @@ image::images/box-camel.png[width=10%]
 
 Feel free to let the car go back on track to put more mileage under its belt. The more laps it covers the more data the team can collect for analysis and car improvement.
 
+{empty} +
+
 === End of the day
 
 It was a good day for *Team Camel Racing*, they can bring valuable data to the factory and prepare for the race event. Time to go home and get some well deserved rest.
@@ -547,9 +558,33 @@ NOTE: For convenience, we leave all the other processes (the track and race cont
 
 Did *Team Camel Racing* leave the track? (did the process stop?) Good! Team Camel Racing will crunch the data they collected and will get ready for a race day event.
 
+{empty} +
+
 == Open the race event
 
 The day of the race is here. Big crowds are expected to attend.
+
+[NOTE]
+====
+Verify the processes below are still running:
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+ PID    NAME          READY  STATUS    AGE    TOTAL  FAIL  INFLIGHT   
+ 10513  track          1/1   Running  22m55s    138     0         0   
+ 10725  race-control   1/1   Running  20m34s      2     0         0 
+</pre>
+++++
+
+Use the command:
+
+[source,bash]
+----
+camel ps
+----
+
+You should see in your terminal an output similar to the one from above.
+====
+
 
 NOTE: Verify the processes below are still running. Use the command `camel ps`. You should see in your terminal an output similar to:
 
