@@ -1063,11 +1063,41 @@ camel cmd send broadcast --uri direct:commercial \
 --body "JBang it. Instant Camel. Instant win."
 ----
 
-NOTE: `cmd send` is a command to send a message with Camel JBang: `broadcast` is the target process, `direct:commercial` is the target endpoint in that process, `--body` defines the message (the commercial content) to send.
+[NOTE]
+====
+`cmd send` is a command to send a message with Camel JBang:.
+
+* `broadcast` is the target process
+* `direct:commercial` is the target endpoint in that process
+* `--body` defines the message (the commercial content) to send
+====
 
 Ads will be shown to audiences watching the race.
 
+.Example output
+----
+[       ]        | 🐪‾ō͡≡o˞̶ |         |         |
+[       ]        | 🐎‾ō͡≡o˞̶ |         |         |
+|----------------------------------------------|
+| JBang + Camel: Instant routes,instant victory
+|----------------------------------------------|
+[       ]        |         | 🐪‾ō͡≡o˞̶ |         |
+[       ]        |         | 🐎‾ō͡≡o˞̶ |         |
+[       ]        |         |         | 🐎‾ō͡≡o˞̶ |
+[       ]        |         |         | 🐪‾ō͡≡o˞̶ |
+[       ]        | 🐎‾ō͡≡o˞̶ |         |         |
+[       ]        | 🐪‾ō͡≡o˞̶ |         |         |
+[       ]        |         | 🐎‾ō͡≡o˞̶ |         |
+[       ]        |         | 🐪‾ō͡≡o˞̶ |         |
+|----------------------------------------------|
+| No build, no wait—just pure Camel JBang speed
+|----------------------------------------------|
+[       ]        |         |         | 🐪‾ō͡≡o˞̶ |
+[       ]        |         |         | 🐎‾ō͡≡o˞̶ |
+----
 TIP: Be considerate with the amount of commercials you show. Overloading drops viewer retention.
+
+{empty} +
 
 === Get race statistics
 
@@ -1081,6 +1111,10 @@ camel get route track --short-uri
 NOTE: The command indicates to monitor route data from the `track` process.
 
 TIP: You can hook the command using the `--watch` flag for continuous monitoring of the race progress (*Ctrl+C* to stop).
+
+:experimental:
+
+TIP: You can hook the command using the `--watch` flag for continuous monitoring of the race progress (kbd:[Ctrl+C] to stop).
 
 You should see lines like:
 
