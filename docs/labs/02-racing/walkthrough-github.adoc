@@ -8,6 +8,8 @@ This chapter is an introductory taste of _Camel JBang_ showing you a basic group
 
 NOTE: Familiarity with Apache Camel is helpful but not required to complete this lab. If you have little or no prior experience, consider reviewing an introduction to Enterprise Integration Patterns and Apache Camel first: https://developers.redhat.com/products/red-hat-build-of-apache-camel[Red Hat build of Apache Camel (enterprise-focused overview)].
 
+{empty} +
+
 == Build a racing track
 
 This chapter is an introductory taste of _Camel JBang_ in a motoracing context: a racing track with three sectors and a boxes area, plus racing teams that participate in practice and race sessions, each with a livery and team radio.
@@ -49,6 +51,8 @@ When created the first time, your `lab` directory is empty:
 📁 workshop
    📁 lab    (empty)
 ----
+
+{empty} +
 
 === Build a racing track
 
@@ -155,22 +159,12 @@ Two additional routes provide flow control for the track:
 
 You should see the new YAML file in your file explorer:
 
---
-📁 lab +
-pass:[<mark style="padding-left: 1rem; background-color: white; color: purple"><b><i>&nbsp;!&nbsp;&nbsp;</i></b></mark>]*track.yaml* +
---
-
-
-
-NOTE: Two additional routes provide flow control for the track: `signals` retains in a variable the last race-control directive; `init` initializes the finish position variable, used to assign the finishing position to the cars.
-
-You should see the new YAML file in your file explorer:
-
-.Example
 ----
 📁 lab
-   track.yaml
+    track.yaml
 ----
+
+{empty} +
 
 === Run the track
 
@@ -199,6 +193,8 @@ image::images/track-folders.png[width=10%]
 NOTE: Make sure you unfold (down arrow *⋁* ) the track folder to display the sectors.
 
 NOTE: The track watches the `race-control` directory, necessary for sector 3.
+
+{empty} +
 
 === Set up a race control system
 
@@ -300,9 +296,16 @@ If you see the same output, then the track is ready, race control is on duty, te
 
 Do you see the track and race control processes running? Good! Let's move on to the next step.
 
+{empty} +
+
 == Put a team together
 
 You found the sponsorship you needed to put together the racing team of your dreams:
+
+
+++++
+<span style="font-size:45px;">&nbsp;&nbsp;🐪&nbsp;</span><span style="font-size:25px;"><b>Team Camel Racing</b></span><span style="font-size:45px;">&nbsp;🐪</span>
+++++
 
 **Team Camel Racing** 🐪
 
