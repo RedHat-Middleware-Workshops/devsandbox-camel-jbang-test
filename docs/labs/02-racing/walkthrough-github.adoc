@@ -14,7 +14,7 @@ NOTE: Familiarity with Apache Camel is helpful but not required to complete this
 
 == Build a racing track
 
-This chapter is an introductory taste of _Camel JBang_ in a motoracing context: a racing track with three sectors and a boxes area, plus racing teams that participate in practice and race sessions, each with a livery and team radio.
+This chapter is an introductory taste of _Camel JBang_ in a motoracing context: a racing track with three sectors and a boxes area, plus racing teams that participate in practice and race sessions.
 
 _Camel JBang_ is a command-line interface (CLI) that accelerates prototyping by letting developers quickly create, validate, and tweak flows without complex setups, making it perfect for rapid experimentation.
 
@@ -200,13 +200,15 @@ NOTE: The track watches the `race-control` directory, necessary for sector 3.
 
 === Set up a race control system
 
-Any serious racing track needs a control room. Race control is responsible for communicating directives for the teams to follow, such as:
+Any serious racing circuit requires a dedicated race control room.
 
-* Communicate directives to the teams, such as:
-** Signal the start of a practice session
-** Signal the return to boxes
-** Signal the grid formation for the race
-* Trigger the race start sequence and start the race
+Race control is responsible for:
+
+* Communicating directives to teams, including:
+** Signalling the start of a practice session
+** Signalling return to the pits
+** Signalling grid formation for the race
+* Triggering the race start sequence and starting the race
 
 Copy and paste the following into your terminal to put together your `race-control.yaml` crew:
 
@@ -242,7 +244,7 @@ cat <<'EOF' > race-control.yaml
             - delay:
                 constant: 2000
         - setBody:
-            constant: race-on
+            constant: light-turns-green
         - to:
             uri: file:race-control
         - loop:
@@ -310,7 +312,7 @@ You found the sponsorship you needed to put together the racing team of your dre
 
 {empty} +
 
-A racing team can participate in practice and race sessions. It has a *livery* (default is 🐪, but you can configure a different one for other teams).
+A racing team can participate in practice and race sessions. Teams like to decorate their cars in distinctive colors and display sponsorship logos: this is called a livery. We'll use 🐪 as the default livery, but it can be configured with different values for other teams.
 
 [NOTE]
 ====
@@ -382,7 +384,7 @@ cat <<'EOF' > team.yaml
               steps:
                 - setBody:
                     simple: "{{livery:🐪}} The race is about to start, please drive the car to the grid."
-            - simple: ${body} == 'race-on'
+            - simple: ${body} == 'light-turns-green'
               steps:
                 - setBody:
                     simple: "{{livery:🐪}} Good start! mind your brakes still need to gain temperature."
@@ -704,7 +706,7 @@ cat <<'EOF' > broadcast.yaml
             - log:
                 message: "[       ]        🔴        |         |         |"
         - filter:
-            simple: "${body} == 'race-on'"
+            simple: "${body} == 'light-turns-green'"
             steps:
             - log:
                 message: "[       ]        🟢        |         |         |"
