@@ -684,6 +684,8 @@ EOF
 ----
 --
 
+NOTE: Camel's DSL is powerful and flexible. You can define inline beans in your YAML files. Notice above the definition of a Groovy based bean.  In the example above, we're using a bean to retire the car (delete the car from the track when the race ends). 
+
 {empty} +
 
 At this point, you should see the following sources in your file explorer:
