@@ -2,6 +2,8 @@
 
 This repository contains hands-on tutorials to get you started with **Camel JBang**—the CLI that lets you run, iterate, and test Apache Camel applications without complex setup. The labs use small, playful scenarios (tennis rally and motor racing) so you can learn core commands and patterns by doing.
 
+Click the link to read the <a href="https://developers.redhat.com/blog/2026/02/10/camel-jbang-motion-two-new-hands-labs-fast-paced-learning" target="_blank" rel="noopener noreferrer">introductory blog article</a>.
+
 You can run these tutorials in three ways. Pick your path:
 
 ---
