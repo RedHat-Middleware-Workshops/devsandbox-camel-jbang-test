@@ -293,7 +293,7 @@ You should see in your terminal the following output:
 ----
   PID   NAME          READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
  10513  track          1/1   Running  23s      1     0         0
- 10725  race-control   1/1   Running   6s      1     0         0
+ 10725  race-control   1/1   Running   6s      0     0         0
 ----
 
 If you see the same output, then the track is ready, race control is on duty, teams can now arrive at the track and participate on racing sessions.
@@ -1281,4 +1281,84 @@ Let's do a quick review of the types of commands you learned about in this lab:
 
 {empty} +
 
-Continue exploring other examples to discover what _Camel JBang_ can do beyond this intro, and how it fits with other tools for working quickly with _Apache Camel_.
+=== Take the code further
+
+If you enjoyed the playful theme of the lab and you'd like to take it further with your own experiments, read below some suggested ideas for you, but you're ultimately the creator of your own adventures!
+
+{empty} +
+
+==== Display the number of laps completed
+
+What about starting with a simple one using simple Camel modifications? Try to think on how to keep count of the laps completed by the cars and display the count on the track drawing a line on each new lap that starts, for example:
+
+++++
+<pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.1;">
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+|----------------------------------------------| Lap 2
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |
+[       ]        |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |
+[       ]        |         |         |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |
+|----------------------------------------------| Lap 3
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐪‾ō͡≡o˞̶</span> |         |         |
+[       ]        |<span style="display:inline-block;width:8ch;min-width:8ch"> 🐎‾ō͡≡o˞̶</span> |         |         |
+</pre>
+++++
+
+{empty} +
+
+==== Play more with Camel JBang's *dev* mode
+
+Think of ways to introduce weather variables to the race. For instance, you could redifine the pace of the cars based on the weather conditions. Rainy conditions could make the cars slower.
+
+Another idea would be to factor in tire performance, a slick tire for dry conditions delivers a fast pace, but a wet tire in the rain could make the cars slower.
+
+{empty} +
+
+==== Improve radio messages with AI
+
+Plug in an AI model to generate more realistic team radio messages. +
+The current implementation uses static messages shared across all teams.
+Make them dynamic and immersive.
+
+[TIP]
+=====
+Apache Camel 4.17 includes a new *camel-openai* component for easy OpenAI integration. +
+link:https://camel.apache.org/blog/2026/01/camel-openai[Read more^].
+=====
+
+Radio transmissions are currently sparse during the race.
+Introduce logic to react to events like:
+
+- Fastest lap of the race
+- Overtake (car passing another)
+- Simulated mechanical issue (car slowdown)
+- Weather conditions (rain, snow, etc.)
+
+{blank}
+
+AI can generate fun, contextual communications between teams and drivers.
+
+{empty} +
+
+==== Be the creator of your own adventure
+
+The possibilities are endless. +
+You're the creator of your own adventure.
+
+Discover other Camel JBang commands you haven't tried yet. +
+Read more in the official Camel JBang documentation: link:https://camel.apache.org/manual/camel-jbang.html[Camel JBang documentation^].
+
+Try also in your terminal the following command:
+
+[source,bash]
+----
+camel --help
+----
+
+Have fun and let your imagination run wild!
+
+{empty} +
